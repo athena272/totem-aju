@@ -1,0 +1,17 @@
+# Dependencias de runtime do Totem Aju.
+#
+# ATENCAO: requer Python 3.12. O MediaPipe nao publica wheels para 3.13 ou 3.14.
+# Ver docs/arquitetura.md.
+#
+# Instalacao:
+#   py -3.12 -m venv .venv
+#   .\.venv\Scripts\Activate.ps1
+#   pip install -r requirements.txt
+
+mediapipe==0.10.21
+numpy==1.26.4
+
+# NAO adicione opencv-python aqui. O mediapipe ja depende de
+# opencv-contrib-python, e as duas distribuicoes instalam o mesmo modulo 'cv2',
+# sobrescrevendo uma a outra de forma dependente da ordem de instalacao.
+# O acesso a webcam usa o cv2 fornecido pelo opencv-contrib-python.

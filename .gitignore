@@ -1,0 +1,54 @@
+# Ambiente virtual
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Ferramentas
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Dados de coleta: nunca versionar landmarks, videos ou imagens.
+# Sao grandes, binarios e podem conter dados pessoais identificaveis.
+# O diretorio e criado automaticamente pelo CLI de coleta.
+#
+# A barra inicial ancora o padrao na raiz do repositorio. Sem ela, 'data/'
+# casaria com qualquer diretorio chamado 'data' em qualquer profundidade, e
+# excluiria o pacote de codigo src/totem_aju/data/.
+/data/
+*.npy
+*.npz
+*.mp4
+*.avi
+*.mov
+
+# Modelos treinados: artefatos binarios, distribuidos fora do git.
+# Ancorado na raiz pelo mesmo motivo de /data/.
+/models/
+*.pt
+*.pth
+*.onnx
+*.ckpt
+
+# Segredos
+.env
+.env.*
+!.env.example
+
+# IDE e sistema operacional
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
