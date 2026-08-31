@@ -1,0 +1,101 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+# Cancela execucoes antigas do mesmo branch quando um novo push acontece,
+# evitando fila desnecessaria durante uma sequencia de commits.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  qualidade:
+    name: Lint e testes (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Windows porque e onde a equipe desenvolve e onde o totem vai rodar;
+        # Ubuntu porque e mais rapido e pega dependencia de separador de
+        # caminho e de sistema de arquivos que passaria batido so no Windows.
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      # Instala DELIBERADAMENTE apenas as dependencias de desenvolvimento, sem
+      # MediaPipe e sem OpenCV. Isso transforma em verificacao continua a
+      # premissa da arquitetura descrita em docs/arquitetura.md: a logica de
+      # dominio depende de Protocol, nao de bibliotecas concretas, e a suite de
+      # testes roda sem elas. Se alguem introduzir um import de mediapipe no
+      # topo de um modulo de dominio, este job falha.
+      - name: Instalar dependencias de desenvolvimento
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Verificar lint
+        run: ruff check --output-format=github .
+
+      - name: Verificar formatacao
+        run: ruff format --check .
+
+      - name: Rodar testes
+        run: pytest -v
+
+  integracao:
+    name: Integracao com MediaPipe
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      # O OpenCV empacotado com o MediaPipe depende dessas bibliotecas
+      # nativas, ausentes no runner headless do GitHub.
+      - name: Instalar bibliotecas nativas do OpenCV
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libgl1 libglib2.0-0
+
+      - name: Instalar dependencias de runtime
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -e .
+
+      # Garante que nao existam duas distribuicoes do OpenCV instaladas.
+      # Ambas fornecem o modulo cv2 e se sobrescrevem conforme a ordem de
+      # instalacao, quebrando o import de forma dificil de diagnosticar.
+      - name: Verificar conflito de distribuicoes do OpenCV
+        run: |
+          if pip list --format=freeze | grep -q '^opencv-python=='; then
+            echo "::error::opencv-python instalado junto de opencv-contrib-python. Remova-o de requirements.txt."
+            exit 1
+          fi
+
+      - name: Verificar extracao de landmarks com MediaPipe
+        run: python scripts/smoke_mediapipe.py
+
+      - name: Verificar entrypoint do CLI
+        run: totem-capture --list-signs
