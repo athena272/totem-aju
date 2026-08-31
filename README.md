@@ -1,5 +1,7 @@
 # Totem Aju
 
+[![CI](https://github.com/athena272/totem-aju/actions/workflows/ci.yml/badge.svg)](https://github.com/athena272/totem-aju/actions/workflows/ci.yml)
+
 Totem interativo de acessibilidade comunicacional em **Libras** para turistas
 surdos em Aracaju, Sergipe.
 
@@ -127,6 +129,32 @@ ruff check .
 ruff format .
 ```
 
+### Integração contínua
+
+O [workflow de CI](.github/workflows/ci.yml) roda a cada push na `main` e em todo
+pull request, em dois jobs:
+
+**`qualidade`** — lint, formatação e testes, no Ubuntu e no Windows. Instala
+apenas `requirements-dev.txt`, **sem MediaPipe e sem OpenCV**. Isso é
+intencional: transforma em verificação contínua a premissa da arquitetura de que
+a lógica de domínio depende de `Protocol`, e não de bibliotecas concretas. Se
+alguém introduzir um `import mediapipe` no topo de um módulo de domínio, este job
+falha.
+
+**`integracao`** — instala as dependências completas e executa
+[`scripts/smoke_mediapipe.py`](scripts/smoke_mediapipe.py), verificando que a
+biblioteca nativa carrega, que o extractor concreto satisfaz o contrato e que o
+vetor produzido tem o formato esperado. Também falha se `opencv-python` for
+reintroduzido junto de `opencv-contrib-python`.
+
+Antes de abrir um pull request, rode localmente o mesmo que o CI roda:
+
+```powershell
+ruff check .
+ruff format --check .
+pytest
+```
+
 ### Estrutura
 
 ```
@@ -146,6 +174,8 @@ src/totem_aju/
     recorder.py               orquestra captura → disco
   cli/
     capture.py                interface de coleta
+scripts/
+  smoke_mediapipe.py          verificação do ambiente completo (fora da suíte)
 ```
 
 O MediaPipe e o OpenCV ficam atrás de `Protocol`, com import preguiçoso nas
