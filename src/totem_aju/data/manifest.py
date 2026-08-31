@@ -126,11 +126,7 @@ class SampleManifest:
         if not self._path.exists():
             return []
         with self._path.open(encoding=MANIFEST_ENCODING) as handle:
-            return [
-                SampleRecord.from_json(line)
-                for line in handle
-                if line.strip()
-            ]
+            return [SampleRecord.from_json(line) for line in handle if line.strip()]
 
     def count_by_sign(self) -> dict[str, int]:
         """Conta amostras por sinal, para acompanhar o progresso da coleta."""

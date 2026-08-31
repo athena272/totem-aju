@@ -62,9 +62,7 @@ class SampleRecorder:
         """
         ensure_known_sign(sign)
         if n_frames <= 0:
-            raise ValueError(
-                f"'n_frames' deve ser positivo, recebido {n_frames}."
-            )
+            raise ValueError(f"'n_frames' deve ser positivo, recebido {n_frames}.")
 
         buffer = SequenceBuffer(
             max_frames=n_frames, sequence_length=self._sequence_length
@@ -85,9 +83,7 @@ class SampleRecorder:
         self._manifest.append(record)
         return record
 
-    def _persist_sequence(
-        self, sign: str, signer_id: str, sequence: np.ndarray
-    ) -> str:
+    def _persist_sequence(self, sign: str, signer_id: str, sequence: np.ndarray) -> str:
         """Salva o array e devolve o caminho relativo a raiz do dataset.
 
         O nome do arquivo e sequencial por sinal e sinalizador, o que evita
