@@ -40,15 +40,18 @@ def build_parser() -> argparse.ArgumentParser:
         prog="totem-capture",
         description="Coleta amostras de sinais em Libras para o Totem Aju.",
     )
+    # --sign e --signer sao obrigatorios para gravar, mas nao podem ser
+    # exigidos pelo argparse: --list-signs existe justamente para descobrir
+    # quais sinais existem, e nao faria sentido exigir que o usuario ja saiba o
+    # sinal para poder consultar a lista. A obrigatoriedade e validada em
+    # main(), depois de --list-signs ser tratado.
     parser.add_argument(
         "--sign",
-        required=True,
         help="Identificador do sinal. Use --list-signs para ver o vocabulario.",
     )
     parser.add_argument(
         "--signer",
-        required=True,
-        help="Identificador de quem esta sinalizando (obrigatorio).",
+        help="Identificador de quem esta sinalizando (obrigatorio para gravar).",
     )
     parser.add_argument(
         "--repetitions",
@@ -154,6 +157,19 @@ def main(argv: list[str] | None = None) -> int:
     if args.list_signs:
         _print_vocabulary()
         return 0
+
+    missing = [
+        flag
+        for flag, value in (("--sign", args.sign), ("--signer", args.signer))
+        if not value
+    ]
+    if missing:
+        print(
+            f"Erro: argumento(s) obrigatorio(s) ausente(s): {', '.join(missing)}.\n"
+            "Use --list-signs para ver o vocabulario disponivel.",
+            file=sys.stderr,
+        )
+        return 2
 
     if not is_known_sign(args.sign):
         print(

@@ -20,13 +20,13 @@ class TestArgumentParsing:
         assert args.sign == "praia"
         assert args.signer == "ana"
 
-    def test_sign_is_required(self) -> None:
-        with pytest.raises(SystemExit):
-            build_parser().parse_args(["--signer", "ana"])
+    def test_parser_does_not_demand_sign(self) -> None:
+        """O parser aceita a ausencia; a exigencia e validada em main().
 
-    def test_signer_is_required(self) -> None:
-        with pytest.raises(SystemExit):
-            build_parser().parse_args(["--sign", "praia"])
+        Exigir --sign no argparse quebraria --list-signs, que existe para
+        descobrir quais sinais existem.
+        """
+        assert build_parser().parse_args(["--list-signs"]).sign is None
 
     def test_repetitions_has_default(self) -> None:
         args = build_parser().parse_args(["--sign", "praia", "--signer", "ana"])
@@ -34,14 +34,41 @@ class TestArgumentParsing:
 
 
 class TestListSigns:
-    def test_exits_successfully(self) -> None:
-        assert main(["--list-signs", "--sign", "praia", "--signer", "ana"]) == 0
+    def test_works_without_other_arguments(self) -> None:
+        """Consultar o vocabulario nao pode exigir saber o sinal de antemao."""
+        assert main(["--list-signs"]) == 0
 
     def test_prints_whole_vocabulary(self, capsys: pytest.CaptureFixture[str]) -> None:
-        main(["--list-signs", "--sign", "praia", "--signer", "ana"])
+        main(["--list-signs"])
         output = capsys.readouterr().out
         for sign in all_signs():
             assert sign in output
+
+
+class TestRequiredArguments:
+    @pytest.mark.parametrize(
+        ("argv", "expected_flag"),
+        [
+            (["--signer", "ana"], "--sign"),
+            (["--sign", "praia"], "--signer"),
+        ],
+    )
+    def test_missing_argument_returns_usage_error(
+        self,
+        argv: list[str],
+        expected_flag: str,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        assert main(argv) == 2
+        assert expected_flag in capsys.readouterr().err
+
+    def test_reports_all_missing_arguments(
+        self, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        assert main([]) == 2
+        error = capsys.readouterr().err
+        assert "--sign" in error
+        assert "--signer" in error
 
 
 class TestValidation:
