@@ -25,7 +25,9 @@ jobs:
         # Windows porque e onde a equipe desenvolve e onde o totem vai rodar;
         # Ubuntu porque e mais rapido e pega dependencia de separador de
         # caminho e de sistema de arquivos que passaria batido so no Windows.
-        os: [ubuntu-latest, windows-latest]
+        # ubuntu-24.04 fixo: ubuntu-latest migra para Ubuntu 26 em out/2026
+        # (aviso do GitHub Actions). Evita surpresa de imagem no meio do semestre.
+        os: [ubuntu-24.04, windows-latest]
 
     steps:
       - uses: actions/checkout@v5
@@ -59,7 +61,7 @@ jobs:
 
   integracao:
     name: Integracao com MediaPipe
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v5
