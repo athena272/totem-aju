@@ -1,0 +1,163 @@
+{
+  "meta": {
+    "city": "Aracaju",
+    "state": "Sergipe",
+    "language": "pt-BR",
+    "disclaimer": "Este totem é um recurso complementar de vocabulário limitado. Não substitui intérprete de Libras.",
+    "last_review": "2026-09-02"
+  },
+  "categories": [
+    {
+      "id": "servico",
+      "label": "Serviços",
+      "hint": "Banheiro, comida, emergência"
+    },
+    {
+      "id": "transporte",
+      "label": "Transporte",
+      "hint": "Ônibus, táxi, aeroporto"
+    },
+    {
+      "id": "ponto_turistico",
+      "label": "Pontos turísticos",
+      "hint": "Orla, praia, centro"
+    },
+    {
+      "id": "pergunta",
+      "label": "Perguntas",
+      "hint": "Onde, como chegar, quanto custa"
+    }
+  ],
+  "responses": {
+    "ola": {
+      "title": "Olá",
+      "text": "Olá! Eu sou o Totem Aju. Posso ajudar com informações turísticas de Aracaju em texto e em Libras. Escolha uma categoria para começar.",
+      "verified_at": "2026-09-02"
+    },
+    "obrigado": {
+      "title": "De nada",
+      "text": "De nada. Se precisar de mais alguma informação sobre Aracaju, é só perguntar. Boa visita!",
+      "verified_at": "2026-09-02"
+    },
+    "ajuda": {
+      "title": "Ajuda",
+      "text": "Para obter atendimento humano com intérprete de Libras, procure a recepção do local ou o setor de acessibilidade. Este totem responde apenas a um vocabulário limitado de sinais turísticos.",
+      "verified_at": "2026-09-02"
+    },
+    "banheiro": {
+      "title": "Banheiro",
+      "text": "Na Orla de Atalaia há banheiros públicos próximos ao Oceanário e ao Parque da Sementeira. Em shopping centers e mercados municipais também há sanitários acessíveis. Pergunte a um funcionário se precisar de localização precisa.",
+      "verified_at": "2026-09-02"
+    },
+    "comer": {
+      "title": "Onde comer",
+      "text": "Na Orla de Atalaia você encontra restaurantes de frutos do mar e bares à beira-mar. No Centro, o Mercado Municipal oferece comida típica sergipana. Para opções variadas, há também a Passagem das Artes e a região de Atalaia Nova.",
+      "verified_at": "2026-09-02"
+    },
+    "agua": {
+      "title": "Água",
+      "text": "Na Orla de Atalaia há bebedouros públicos e quiosques que vendem água. Em shoppings e mercados você encontra supermercados e lojas de conveniência.",
+      "verified_at": "2026-09-02"
+    },
+    "hospital": {
+      "title": "Hospital",
+      "text": "Em emergência, ligue 192 (SAMU) ou 193 (Bombeiros). Hospitais de referência em Aracaju incluem o Hospital de Urgência de Sergipe (HUSE) e o Hospital Santa Izabel. Fale com a recepção do local para o caminho mais próximo.",
+      "verified_at": "2026-09-02"
+    },
+    "policia": {
+      "title": "Polícia",
+      "text": "Em emergência, ligue 190. Há postos de atendimento turístico e de segurança na Orla de Atalaia. Procure a recepção do local se precisar de orientação imediata.",
+      "verified_at": "2026-09-02"
+    },
+    "dinheiro": {
+      "title": "Banco e caixa",
+      "text": "Há caixas eletrônicos em shoppings, no Centro e em agências bancárias pela cidade. Na Orla de Atalaia você encontra caixas próximos à área comercial. Prefira locais iluminados e movimentados.",
+      "verified_at": "2026-09-02"
+    },
+    "hotel": {
+      "title": "Hospedagem",
+      "text": "A maior oferta de hotéis e pousadas fica na Orla de Atalaia e em Atalaia Nova. No Centro há opções mais econômicas. Consulte a recepção turística para reservas e disponibilidade atualizadas.",
+      "verified_at": "2026-09-02"
+    },
+    "onibus": {
+      "title": "Ônibus",
+      "text": "O transporte urbano de Aracaju é operado por linhas municipais. Na Orla de Atalaia há pontos de ônibus ao longo da avenida. Para itinerários atualizados, consulte o aplicativo ou a informação oficial da prefeitura, pois linhas e horários mudam.",
+      "verified_at": "2026-09-02"
+    },
+    "taxi": {
+      "title": "Táxi e aplicativos",
+      "text": "Em Aracaju há táxis convencionais e aplicativos de transporte. Na Orla de Atalaia e no aeroporto há pontos de táxi. Confirme o valor estimado antes de iniciar a corrida.",
+      "verified_at": "2026-09-02"
+    },
+    "aeroporto": {
+      "title": "Aeroporto",
+      "text": "O Aeroporto Santa Maria fica a cerca de 12 quilômetros do Centro de Aracaju. Você pode ir de táxi, aplicativo ou ônibus. O trajeto até a Orla de Atalaia costuma levar de 25 a 40 minutos, conforme o trânsito.",
+      "verified_at": "2026-09-02"
+    },
+    "praia": {
+      "title": "Praia",
+      "text": "As praias mais visitadas de Aracaju são Atalaia, Aruana e Mosqueiro. A Orla de Atalaia é a principal área de lazer, com calçadão, ciclovia e quiosques. Atenção às bandeiras de sinalização de banho.",
+      "verified_at": "2026-09-02"
+    },
+    "orla": {
+      "title": "Orla de Atalaia",
+      "text": "A Orla de Atalaia é o principal cartão-postal de Aracaju. Há calçadão, ciclovia, Oceanário, Passarela do Caranguejo e diversos restaurantes. É um bom ponto de partida para conhecer a cidade.",
+      "verified_at": "2026-09-02"
+    },
+    "mercado": {
+      "title": "Mercados",
+      "text": "O Mercado Municipal Thales Ferraz, no Centro, é uma boa opção para artesanato e comida típica. Há também o Mercado Albano Franco. Confirme o horário de funcionamento no dia da visita.",
+      "verified_at": "2026-09-02"
+    },
+    "museu": {
+      "title": "Museus",
+      "text": "Em Aracaju você encontra o Museu da Gente Sergipana, o Museu do Homem Sergipano e espaços culturais no Centro Histórico. Verifique horários e bilheteria antes de ir, pois podem variar.",
+      "verified_at": "2026-09-02"
+    },
+    "igreja": {
+      "title": "Igrejas",
+      "text": "No Centro Histórico há igrejas tradicionais, como a Catedral Metropolitana. São pontos de interesse cultural e religioso. Respeite os horários de celebração ao visitar.",
+      "verified_at": "2026-09-02"
+    },
+    "centro": {
+      "title": "Centro de Aracaju",
+      "text": "O Centro Histórico concentra mercados, prédios antigos, museus e comércio. É uma boa área para conhecer a história da cidade. Prefira visitar durante o dia e use transporte seguro à noite.",
+      "verified_at": "2026-09-02"
+    },
+    "onde": {
+      "title": "Onde fica?",
+      "text": "Escolha um lugar na categoria Pontos turísticos ou Serviços. Eu indico a localização em texto e em Libras.",
+      "verified_at": "2026-09-02"
+    },
+    "como_chegar": {
+      "title": "Como chegar",
+      "text": "Escolha o destino em Pontos turísticos ou Transporte. Eu explico o caminho em texto e em Libras. Para trajeto detalhado em tempo real, combine com táxi ou aplicativo.",
+      "verified_at": "2026-09-02"
+    },
+    "quanto_custa": {
+      "title": "Quanto custa",
+      "text": "Preços de ingresso, comida e transporte mudam com frequência. Por segurança, este totem não inventa valores. Pergunte na bilheteria ou no estabelecimento no dia da visita.",
+      "verified_at": "2026-09-02"
+    },
+    "que_horas": {
+      "title": "Horários",
+      "text": "Horários de funcionamento mudam com feriados e temporada. Confirme no local ou no site oficial no dia da visita. Posso indicar o tipo de lugar; não informo horário inventado.",
+      "verified_at": "2026-09-02"
+    },
+    "sim": {
+      "title": "Sim",
+      "text": "Certo. Escolha a próxima informação que deseja.",
+      "verified_at": "2026-09-02"
+    },
+    "nao": {
+      "title": "Não",
+      "text": "Tudo bem. Escolha outra categoria ou outro tema.",
+      "verified_at": "2026-09-02"
+    },
+    "repetir": {
+      "title": "Repetir",
+      "text": "Toque novamente no texto da resposta e use o VLibras para ver a sinalização outra vez.",
+      "verified_at": "2026-09-02"
+    }
+  }
+}
