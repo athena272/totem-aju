@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Totem Aju — Preview</title>
+    <meta
+      name="description"
+      content="Preview do Totem Aju: informacoes turisticas de Aracaju em texto e em Libras via VLibras."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true"></div>
+
+    <main class="totem">
+      <header class="brand">
+        <p class="brand__place">Aracaju · Sergipe</p>
+        <h1 class="brand__name">Totem Aju</h1>
+        <p class="brand__tagline">
+          Informação turística em texto e em Libras.
+        </p>
+      </header>
+
+      <section class="stage" aria-label="Interface do totem">
+        <div class="panel panel--guide">
+          <h2 class="panel__title">Escolha um tema</h2>
+          <p class="panel__lead">
+            Toque em uma categoria e depois no assunto. A resposta aparece em
+            português; o avatar do VLibras sinaliza em Libras.
+          </p>
+
+          <div
+            id="categories"
+            class="categories"
+            role="tablist"
+            aria-label="Categorias"
+          ></div>
+
+          <div
+            id="signs"
+            class="signs"
+            role="tabpanel"
+            aria-live="polite"
+          ></div>
+        </div>
+
+        <div class="panel panel--answer">
+          <div class="answer-meta">
+            <span id="answer-label" class="answer-label">Resposta</span>
+            <span id="answer-date" class="answer-date"></span>
+          </div>
+
+          <h2 id="answer-title" class="answer-title">
+            Bem-vindo ao Totem Aju
+          </h2>
+
+          <p id="answer-text" class="answer-text" tabindex="0">
+            Toque em um tema ao lado para ver uma resposta. Depois, abra o
+            VLibras no canto da tela e toque neste texto para ver a sinalização
+            em Libras.
+          </p>
+
+          <ol class="howto">
+            <li>Abra o botão azul do <strong>VLibras</strong> no canto.</li>
+            <li>Toque no <strong>texto da resposta</strong> acima.</li>
+            <li>O avatar sinaliza a mesma informação em Libras.</li>
+          </ol>
+
+          <p class="disclaimer" id="disclaimer"></p>
+        </div>
+      </section>
+
+      <footer class="status">
+        <span class="status__dot" aria-hidden="true"></span>
+        <span>Preview demonstrativo · reconhecimento de sinais em desenvolvimento</span>
+      </footer>
+    </main>
+
+    <div vw class="enabled">
+      <div vw-access-button class="active"></div>
+      <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+      </div>
+    </div>
+
+    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+    <script>
+      new window.VLibras.Widget({
+        rootPath: "https://vlibras.gov.br/app",
+        avatar: "hosana",
+        position: "R",
+      });
+    </script>
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
