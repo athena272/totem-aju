@@ -112,6 +112,28 @@ Ao gravar, enquadre cabeça e tronco com folga nas bordas para as mãos, e varie
 iluminação, distância e fundo entre as sessões. O CLI avisa quando uma amostra
 teve baixa taxa de detecção, indicando enquadramento ruim.
 
+## Preview do totem (apresentável agora)
+
+Há um protótipo visual em [`preview/`](preview/) com categorias, respostas
+curadas de Aracaju e o widget oficial do **VLibras**. Ainda **não** reconhece
+sinais pela webcam — simula o sentido *totem → usuário*.
+
+Na pasta do projeto:
+
+```powershell
+cd preview
+python -m http.server 8080
+```
+
+Abra `http://localhost:8080` no navegador. Depois:
+
+1. escolha uma categoria e um tema;
+2. abra o botão azul do VLibras no canto;
+3. toque no texto da resposta para o avatar sinalizar em Libras.
+
+Não abra o `index.html` direto pelo Explorer: o navegador bloqueia o
+`knowledge.json` sem um servidor local.
+
 ## Desenvolvimento
 
 A suíte de testes cobre apenas lógica pura e **não exige MediaPipe nem webcam**,
@@ -174,6 +196,10 @@ src/totem_aju/
     recorder.py               orquestra captura → disco
   cli/
     capture.py                interface de coleta
+preview/
+  index.html                  tela apresentável do totem
+  styles.css / app.js         interface e interação
+  knowledge.json              respostas turísticas curadas
 scripts/
   smoke_mediapipe.py          verificação do ambiente completo (fora da suíte)
 ```
@@ -186,10 +212,11 @@ sintéticos e trabalhar no projeto sem ter a captura configurada. Detalhes em
 ## Situação atual
 
 Concluído: fundação do projeto, pipeline de extração e normalização de landmarks,
-coleta de dados com indexação, e 106 testes automatizados.
+coleta de dados com indexação, suite de testes, CI e **preview apresentável**
+com base curada + VLibras.
 
-Próximas etapas: treino do classificador temporal, base de conhecimento
-turístico, integração do VLibras e interface de quiosque.
+Próximas etapas: coleta do dataset em volume, treino do classificador temporal
+e evolução do preview para o quiosque completo (webcam + reconhecimento).
 
 ## Licença
 
