@@ -31,7 +31,7 @@ Nos frames, táxis circulam na via, pedestres atravessam a faixa ou andam nas ca
 | --- | --- | --- | --- | --- |
 | **Pedestre** | Atravessar sem colisão, respeitar sinalização, reduzir espera | Faixa, calçadas, veículos, outros pedestres, semáforo, postes, árvores, abrigo | Passos, mudança de direção, gestos, botão de pedestre | Visão, audição, propriocepção |
 | **Motorista** | Seguir sem acidente, respeitar semáforo e pedestre, manter fluidez | Via, faixa de táxi, pedestres, sinalização, iluminação | Volante, acelerador, freio, marcha, seta, farol, buzina | Visão, espelhos, painel, audição (e assistência, se houver) |
-| **Semáforo Inteligente** | Segurança, menos espera nos dois fluxos, evitar ciclo vazio | Cruzamento, filas, grupos de pedestres, fase atual | Cores do sinal, tempo de fase, sinal de pedestre | Câmeras/frames, laços/radar, botão ou presença, relógio |
+| **Semáforo Inteligente** | Segurança, menos espera nos dois fluxos, evitar ciclo vazio | Cruzamento, filas, grupos de pedestres, fase atual | Cores do sinal, tempo de fase, sinal de pedestre | Câmeras/frames, detecção de veículos, botão ou presença, relógio |
 
 O pedestre e o motorista só veem o entorno local. O semáforo não se desloca: controla o direito de passar.
 
