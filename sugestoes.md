@@ -2,6 +2,11 @@
 - **Gestos com movimento** (ex.: desenhar algo no ar) → sequência de frames/vídeo.
 - **Posição/dedos da mão** → detecção de pontos da mão (_hand landmarks_), geralmente mais simples e eficiente.
 
+## Podemos fazer como se fosse um menu
+## Aparece 4 opções na tela, cada um representa um símbolo/opção do que quer fazer
+## A pessoa faz o simbolo, pode ser de 1-4 em libras
+## e retorna as informações pedidas
+
 **MediaPipe para detectar os pontos da mão + um classificador próprio**. Ou treinar uma rede neural para "enxergar" a mão inteira.
 
  Exemplo conceitual:
