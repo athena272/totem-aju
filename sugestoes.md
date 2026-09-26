@@ -1,6 +1,5 @@
-Sim — **números em Libras de 0 a 9** são um ótimo projeto para começar. Eu faria de uma forma que seja relativamente simples de treinar e, ao mesmo tempo, demonstre visão computacional de verdade.
 
- ### Arquitetura que eu recomendo
+ ### Arquitetura 
 
 ```
 Webcam
@@ -18,11 +17,10 @@ Classificador (Random Forest / MLP)
 Número em Libras: 0, 1, 2, ..., 9
 ```
 
- A grande vantagem é que você **não precisa treinar uma CNN diretamente com as imagens**. O MediaPipe já encontra a estrutura da mão, e seu modelo aprende a relação entre a posição dos dedos e o número.
 
  ### Dataset
 
- Você pode começar capturando suas próprias imagens.
+ capturar as próprias imagens.
 
  Por exemplo:
 
@@ -40,7 +38,7 @@ dataset/
 └── 9/
 ```
 
- Eu começaria com algo como **300–1000 exemplos por número**, variando:
+cerca de 300-1000 exemplos por simbolo
 
  - posição da mão;
 - distância da câmera;
@@ -49,7 +47,7 @@ dataset/
 - rotação da mão;
 - pessoas diferentes, se possível.
 
- Mas você nem precisa necessariamente guardar as imagens. Podemos fazer:
+ para guardar as imagens. Podemos fazer:
 
 ```
 Webcam → MediaPipe → landmarks → CSV
@@ -64,13 +62,13 @@ x1,y1,z1,x2,y2,z2,...,x21,y21,z21,label
 ...
 ```
 
- Depois o treinamento fica bem simples com `scikit-learn`.
+depois usamos `scikit-learn` para treinamento
 
  ### Um detalhe importante sobre Libras
 
  Antes de montar o dataset, precisamos definir **exatamente quais configurações de mão correspondem aos números de 0 a 9 em Libras**, porque não é simplesmente o mesmo que reconhecer os algarismos visualmente em qualquer convenção.
 
- Também vale decidir se seu objetivo é:
+ decidir:
 
  **A)** reconhecer somente a mão parada mostrando um número;
 
@@ -78,6 +76,6 @@ x1,y1,z1,x2,y2,z2,...,x21,y21,z21,label
 
  **B)** reconhecer os números em tempo real pela webcam, inclusive quando há movimento entre sinais.
 
- Para um primeiro projeto, eu faria **A**. Depois podemos evoluir para B.
+sugiro a gente começar so com **A**
 
- Se quiser, posso montar o projeto inteiro em Python com você, começando pelo **script que abre a webcam, detecta a mão e salva automaticamente os landmarks em um CSV para cada número de Libras**.
+começar com **script que abre a webcam, detecta a mão e salva automaticamente os landmarks em um CSV para cada número de Libras**.
