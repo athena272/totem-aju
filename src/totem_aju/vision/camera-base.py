@@ -13,7 +13,7 @@ while True:
         print("frame nao foi possivel")
         break
 
-    cv2.imshow("tortaLety", frame)
+    cv2.imshow("Totem - AJU", frame)
 
     if cv2.waitKey(1) & 0xFF == 27:
         break
