@@ -55,3 +55,9 @@ SAMPLES_DIRNAME: Final[str] = "samples"
 # --- Numero minimo de repeticoes recomendado por sinal e sinalizador --------
 
 MIN_REPETITIONS_PER_SIGN: Final[int] = 20
+
+
+# Suavização temporal e heurísticas de visão
+ALPHA_SUAVIZACAO_LANDMARKS: float = 0.5
+LIMIAR_ANGULO_DEDO_ABERTO: float = 140.0
+LIMIAR_ANGULO_POLEGAR_ABERTO: float = 150.0
