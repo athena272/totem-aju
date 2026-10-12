@@ -204,6 +204,89 @@ No **frame Y ≈ 000110**, com fase de pedestre (faixa verde) e um grupo amarelo
 
 ---
 
+## Parte 4. A* dos demais agentes
+
+A Parte 3 roteia o pedestre. Aqui o mesmo raciocínio é aplicado ao **Motorista**, e o **Semáforo Inteligente** aparece no papel que ele de fato tem na cena: não busca rota, mas muda o grafo dos outros dois.
+
+### Motorista (táxi)
+
+O táxi quer sair do trecho antes do cruzamento (**Aproximação**) e chegar ao trecho depois da faixa de pedestres (**Saída**), sem colocar ninguém em risco.
+
+**Grafo.** A via vira uma sequência de trechos de **5 m**. O valor vem do tamanho do veículo: um táxi tem cerca de 4,5 m de comprimento, então cada nó comporta um carro. A grade de 0,5 m do pedestre seria fina demais, porque o táxi ocuparia nove células de uma vez.
+
+Como esperar também é uma decisão, o nó guarda **posição e instante**. Ficar parado na linha de retenção por alguns segundos leva a outro nó (`Espera`), no mesmo lugar e mais tarde. Por isso a faixa aparece em dois nós: `FaixaOcupada` (agora, com pedestres) e `FaixaLivre` (depois da espera).
+
+| Nó | Significado |
+| --- | --- |
+| `Aproximacao` | Trecho antes do cruzamento (início) |
+| `Retencao` | Linha de parada antes da faixa de pedestres |
+| `Espera` | Mesma linha de parada, alguns segundos depois |
+| `FaixaOcupada` | Sobre a faixa enquanto há pedestres nela (vermelho) |
+| `FaixaLivre` | Sobre a faixa depois que ela esvaziou (verde) |
+| `Saida` | Trecho depois do cruzamento (objetivo) |
+
+**g(n) = distância percorrida + manobra + espera + penalidade de pedestre**
+
+- Avançar um trecho: **5** (metros).
+- Trocar de faixa de rolamento: **+2**. Neste frame não ajuda, porque a faixa de pedestres atravessa todas as faixas da via.
+- Espera na retenção: **+1 por segundo**. Na prática, 1 s parado pesa como 1 m andado.
+- Entrar na faixa com pedestre: **+100**. É proibitivo pelo mesmo motivo do +50 do táxi na Parte 3. Com 1 por segundo, só uma espera acima de 100 s (mais que um ciclo semafórico típico, de 60 a 90 s) faria valer a pena avançar sobre gente, ou seja, nunca na prática.
+- Fase de pedestre no semáforo: a aresta `Retencao -> Faixa` não existe (ver o Semáforo abaixo).
+
+**h(n)** = distância restante até `Saida` ao longo da via: 15 em `Aproximacao`, 10 em `Retencao` e `Espera`, 5 sobre a faixa e 0 na saída. Como espera e penalidades só entram em g, h nunca superestima o custo e é admissível.
+
+**Grafo do frame Y**, fase verde para veículos com pedestres ainda terminando a travessia:
+
+```mermaid
+flowchart LR
+  Aproximacao[Aproximacao] -->|5| Retencao["Retencao"]
+  Retencao -->|"5 + 100"| FaixaOcupada["FaixaOcupada (vermelho)"]
+  FaixaOcupada -->|5| Saida[Saida]
+  Retencao -->|"3 (espera 3 s)"| Espera["Espera (amarelo)"]
+  Espera -->|5| FaixaLivre["FaixaLivre (verde)"]
+  FaixaLivre -->|5| Saida
+```
+
+**f(n) nos dois ramos**
+
+| Ramo | Caminho | g até a Saída |
+| --- | --- | --- |
+| A: avançar com gente na faixa | Aproximacao → Retencao → FaixaOcupada → Saida | 5 + 5 + 100 + 5 = **115** |
+| B: esperar 3 s e passar | Aproximacao → Retencao → Espera → FaixaLivre → Saida | 5 + 3 + 5 + 5 = **18** |
+
+Depois de expandir `Retencao` (g = 5), a lista verde tem `FaixaOcupada` com f = 110 + 5 = **115** e `Espera` com f = 8 + 10 = **18**. O A* expande `Espera`, depois `FaixaLivre` (f = 13 + 5 = 18) e chega à `Saida` com custo 18. É o “táxi cede” da Parte 2 expresso em números: esperar 3 s custa muito menos que avançar sobre a faixa.
+
+### Semáforo Inteligente: coordenador, sem A* próprio
+
+O semáforo não se desloca, então não há rota para ele buscar. A decisão dele é **quando trocar de fase**, com base nos sensores do PEAS (filas, presença de pedestres, relógio) e na meta de evitar ciclo vazio. O efeito dessa decisão na busca é **mudar o grafo** de X e do Motorista. Ele é quem pinta o mapa; os outros dois buscam nele.
+
+| Fase | Grafo do pedestre (X) | Grafo do motorista |
+| --- | --- | --- |
+| **Verde para veículos** | Células da via vermelhas; X espera na calçada | `Retencao -> Faixa` existe (com +100 se ainda houver gente na faixa) |
+| **Amarelo para veículos** | Via continua vermelha para X | `Retencao -> Faixa` some para quem ainda consegue parar; sobra `Espera` |
+| **Verde para pedestres** | Faixa verde; X atravessa (Parte 3) | `Retencao -> Faixa` não existe; só `Espera` |
+
+**Ciclo de fases** (cada troca muda o grafo e faz X e o Motorista replanejarem):
+
+```mermaid
+flowchart LR
+  VerdeVeiculos(("Verde veículos")) -->|"fila de pedestres ou tempo máximo"| Amarelo((Amarelo))
+  Amarelo -->|"3 s"| VerdePedestres(("Verde pedestres"))
+  VerdePedestres -->|"faixa vazia ou tempo máximo"| VerdeVeiculos
+```
+
+É o mesmo ponto da máquina de estados da Parte 3: o semáforo não é estado da busca. Ele dispara o replanejamento, e cada agente roda o A* de novo sobre o mapa atualizado.
+
+### Resumo por agente
+
+| Agente | Nó do grafo | O que entra em g(n) | h(n) | Papel na busca |
+| --- | --- | --- | --- | --- |
+| **Pedestre (X)** | Célula de 0,5 m da faixa e calçadas | Distância + penalidade social + táxi (+50) | Distância euclidiana até a calçada oposta | Busca a rota |
+| **Motorista** | Trecho de 5 m da via + instante | Distância + manobra + espera + pedestre na faixa (+100) | Distância restante ao longo da via | Busca a rota |
+| **Semáforo** | Não tem | Não tem | Não tem | Muda o grafo dos outros dois |
+
+---
+
 ## Referências
 
 HALL, Edward T. *The Hidden Dimension*. Garden City: Doubleday, 1966.
