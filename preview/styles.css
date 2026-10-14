@@ -142,6 +142,7 @@ body {
 }
 
 .category {
+  position: relative;
   appearance: none;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -195,6 +196,10 @@ body {
 
 .sign {
   appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   border: 0;
   border-radius: 999px;
   padding: 0.78rem 1rem;
@@ -219,6 +224,51 @@ body {
 .sign.is-active {
   background: var(--sea-bright);
   color: #042028;
+}
+
+.category .gesture-badge {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.75rem;
+}
+
+.gesture-badge {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: 750;
+  color: #042028;
+  background: var(--sand);
+}
+
+.sign.is-active .gesture-badge {
+  background: #042028;
+  color: var(--sand);
+}
+
+.gesture-level {
+  margin: -0.4rem 0 1rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  color: var(--sand);
+  background: var(--danger-soft);
+}
+
+.gesture-level:empty {
+  display: none;
+}
+
+/* Destaca o grupo que responde aos dedos no nível atual do menu. */
+.panel--guide[data-gesture-level="categories"] .categories,
+.panel--guide[data-gesture-level="topics"] .signs {
+  border-radius: calc(var(--radius) + 4px);
+  outline: 1px dashed rgba(216, 179, 106, 0.55);
+  outline-offset: 6px;
 }
 
 .signs__empty {
@@ -290,6 +340,140 @@ body {
   margin-top: 0.35rem;
 }
 
+.vlibras-cta {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  border-radius: calc(var(--radius) + 4px);
+  padding: 1rem 1.15rem;
+  cursor: pointer;
+  color: #2a1c05;
+  background: linear-gradient(135deg, #f0c56a 0%, #e8a93a 55%, #d4922a 100%);
+  box-shadow:
+    0 0 0 3px rgba(232, 169, 58, 0.35),
+    0 14px 28px rgba(0, 0, 0, 0.28);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+  animation: ctaPulse 2.4s ease-out infinite;
+}
+
+.vlibras-cta:hover,
+.vlibras-cta:focus-visible {
+  outline: none;
+  transform: translateY(-2px) scale(1.01);
+  filter: brightness(1.05);
+  box-shadow:
+    0 0 0 4px rgba(232, 169, 58, 0.45),
+    0 18px 34px rgba(0, 0, 0, 0.34);
+}
+
+.vlibras-cta:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.vlibras-cta__icon {
+  flex: 0 0 auto;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  background: rgba(42, 28, 5, 0.14);
+}
+
+.vlibras-cta__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.vlibras-cta__title {
+  font-size: 1.15rem;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.vlibras-cta__hint {
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: rgba(42, 28, 5, 0.78);
+}
+
+.vlibras-beacon {
+  position: fixed;
+  right: 5.6rem;
+  bottom: 1.65rem;
+  z-index: 9998;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  animation: rise 1100ms ease-out both;
+  animation-delay: 400ms;
+}
+
+.vlibras-beacon__label {
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #042028;
+  background: var(--sea-bright);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  white-space: nowrap;
+}
+
+/* Destaca o botão oficial do plugin VLibras (canto da tela). */
+div[vw].enabled {
+  z-index: 9999 !important;
+}
+
+div[vw] .access-button,
+div[vw] [vw-access-button],
+div[vw] .vw-access-button,
+.vw-access-button {
+  transform: scale(1.45) !important;
+  transform-origin: bottom right !important;
+  filter: drop-shadow(0 0 0 rgba(44, 177, 168, 0.9))
+    drop-shadow(0 0 18px rgba(44, 177, 168, 0.75)) !important;
+  animation: widgetGlow 2.2s ease-out infinite !important;
+}
+
+@keyframes ctaPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(232, 169, 58, 0.35),
+      0 14px 28px rgba(0, 0, 0, 0.28);
+  }
+  50% {
+    box-shadow:
+      0 0 0 7px rgba(232, 169, 58, 0.18),
+      0 16px 32px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes widgetGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px rgba(44, 177, 168, 0.55));
+  }
+  50% {
+    filter: drop-shadow(0 0 18px rgba(44, 177, 168, 0.95));
+  }
+}
+
 .disclaimer {
   margin: auto 0 0;
   padding-top: 0.6rem;
@@ -301,6 +485,7 @@ body {
 
 .status {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.55rem;
   color: var(--ink-mute);
@@ -310,12 +495,83 @@ body {
 }
 
 .status__dot {
+  flex: 0 0 auto;
   width: 0.55rem;
   height: 0.55rem;
   border-radius: 50%;
   background: var(--sea-bright);
   box-shadow: 0 0 0 0 rgba(44, 177, 168, 0.55);
   animation: pulse 2.2s ease-out infinite;
+}
+
+/* Estados de espera: ponto girando como indicador de carregamento. */
+.status[data-state="loading"] .status__dot,
+.status[data-state="starting"] .status__dot,
+.status[data-state="searching"] .status__dot {
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid var(--sand);
+  border-right-color: transparent;
+  box-shadow: none;
+  width: 0.8rem;
+  height: 0.8rem;
+  animation: spin 900ms linear infinite;
+}
+
+.status[data-state="offline"] .status__dot,
+.status[data-state="stopped"] .status__dot {
+  background: var(--ink-mute);
+  animation: none;
+}
+
+.status[data-state="stale"] .status__dot,
+.status[data-state="error"] .status__dot {
+  background: #e07a5f;
+  animation: none;
+}
+
+.status[data-state="chosen"] #status-text {
+  color: var(--sea-bright);
+}
+
+.status__progress {
+  display: none;
+  width: 7rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(244, 239, 230, 0.12);
+}
+
+.status[data-state="holding"] .status__progress,
+.status[data-state="chosen"] .status__progress {
+  display: inline-block;
+}
+
+.status__progress-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--sand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms linear;
+}
+
+.status[data-state="chosen"] .status__progress-fill {
+  background: var(--sea-bright);
+}
+
+.status__notice {
+  margin-left: auto;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes rise {
@@ -370,6 +626,15 @@ body {
   .brand__name {
     font-size: 2.6rem;
   }
+
+  .vlibras-beacon {
+    right: 4.8rem;
+    bottom: 1.2rem;
+  }
+
+  .vlibras-beacon__label {
+    font-size: 0.75rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -378,5 +643,12 @@ body {
   *::after {
     animation: none !important;
     transition: none !important;
+  }
+
+  .vlibras-cta,
+  div[vw] .access-button,
+  div[vw] [vw-access-button],
+  .vw-access-button {
+    animation: none !important;
   }
 }

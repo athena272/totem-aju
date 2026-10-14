@@ -1,56 +1,38 @@
-const SIGN_LABELS = {
-  ola: "Olá",
-  obrigado: "Obrigado",
-  sim: "Sim",
-  nao: "Não",
-  ajuda: "Ajuda",
-  repetir: "Repetir",
-  onde: "Onde",
-  como_chegar: "Como chegar",
-  quanto_custa: "Quanto custa",
-  que_horas: "Que horas",
-  banheiro: "Banheiro",
-  comer: "Comer",
-  agua: "Água",
-  hospital: "Hospital",
-  policia: "Polícia",
-  dinheiro: "Dinheiro",
-  hotel: "Hotel",
-  onibus: "Ônibus",
-  taxi: "Táxi",
-  aeroporto: "Aeroporto",
-  praia: "Praia",
-  orla: "Orla",
-  mercado: "Mercado",
-  museu: "Museu",
-  igreja: "Igreja",
-  centro: "Centro",
-};
+import { CATEGORY_SIGNS, labelFor } from "./js/catalog.js";
+import { startGestureFeed } from "./js/gesture-feed.js";
+import {
+  MAX_GESTURE_CATEGORIES,
+  MAX_GESTURE_TOPICS,
+  MENU_LEVEL,
+  createGestureMenu,
+  gestureNumberFor,
+} from "./js/gesture-menu.js";
 
-const CATEGORY_SIGNS = {
-  servico: ["banheiro", "comer", "agua", "hospital", "policia", "dinheiro", "hotel"],
-  transporte: ["onibus", "taxi", "aeroporto"],
-  ponto_turistico: ["praia", "orla", "mercado", "museu", "igreja", "centro"],
-  pergunta: ["onde", "como_chegar", "quanto_custa", "que_horas", "ajuda"],
-};
+const GESTURE_STATE_URL = "./gesture_state.json";
+const NOTICE_DURATION_MS = 4000;
 
 const els = {
+  guide: document.querySelector(".panel--guide"),
   categories: document.querySelector("#categories"),
   signs: document.querySelector("#signs"),
+  gestureLevel: document.querySelector("#gesture-level"),
   answerLabel: document.querySelector("#answer-label"),
   answerDate: document.querySelector("#answer-date"),
   answerTitle: document.querySelector("#answer-title"),
   answerText: document.querySelector("#answer-text"),
   disclaimer: document.querySelector("#disclaimer"),
+  status: document.querySelector("#status"),
+  statusText: document.querySelector("#status-text"),
+  statusProgress: document.querySelector("#status-progress-fill"),
+  statusNotice: document.querySelector("#status-notice"),
+  openVlibras: document.querySelector("#open-vlibras"),
 };
 
 let knowledge = null;
 let activeCategory = null;
 let activeSign = null;
-
-function labelFor(sign) {
-  return SIGN_LABELS[sign] ?? sign;
-}
+let gestureMenu = null;
+let noticeTimer = null;
 
 function formatDate(isoDate) {
   if (!isoDate) return "";
@@ -58,12 +40,38 @@ function formatDate(isoDate) {
   return `Atualizado em ${day}/${month}/${year}`;
 }
 
-function setAnswer(signId) {
+function categoryLabel(categoryId) {
+  return knowledge.categories.find((c) => c.id === categoryId)?.label ?? categoryId;
+}
+
+function setStatus(kind, text, { progress = 0, detail = "" } = {}) {
+  els.status.dataset.state = kind;
+  els.statusText.textContent = text;
+  els.statusText.title = detail;
+  els.statusProgress.style.transform = `scaleX(${progress})`;
+}
+
+function showNotice(text) {
+  els.statusNotice.textContent = text;
+  window.clearTimeout(noticeTimer);
+  noticeTimer = window.setTimeout(() => {
+    els.statusNotice.textContent = "";
+  }, NOTICE_DURATION_MS);
+}
+
+function createGestureBadge(number) {
+  const badge = document.createElement("span");
+  badge.className = "gesture-badge";
+  badge.textContent = String(number);
+  return badge;
+}
+
+function setAnswer(signId, { fromGesture = false } = {}) {
   const entry = knowledge.responses[signId];
   if (!entry) return;
 
   activeSign = signId;
-  els.answerLabel.textContent = "Resposta";
+  els.answerLabel.textContent = fromGesture ? "Escolhido por gesto" : "Resposta";
   els.answerTitle.textContent = entry.title;
   els.answerText.textContent = entry.text;
   els.answerDate.textContent = formatDate(entry.verified_at);
@@ -90,15 +98,23 @@ function renderSigns(categoryId) {
     return;
   }
 
-  for (const sign of signs) {
+  signs.forEach((sign, index) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "sign";
     button.dataset.sign = sign;
-    button.textContent = labelFor(sign);
+
+    const number = gestureNumberFor(index, MAX_GESTURE_TOPICS);
+    if (number !== null) button.append(createGestureBadge(number));
+
+    const label = document.createElement("span");
+    label.textContent = labelFor(sign);
+    button.append(label);
+
+    button.classList.toggle("is-active", sign === activeSign);
     button.addEventListener("click", () => setAnswer(sign));
     els.signs.append(button);
-  }
+  });
 }
 
 function selectCategory(categoryId) {
@@ -115,16 +131,34 @@ function selectCategory(categoryId) {
   renderSigns(categoryId);
 }
 
+function renderGestureLevel() {
+  const { level, optionCount } = gestureMenu;
+  els.guide.dataset.gestureLevel = level;
+  els.gestureLevel.textContent =
+    level === MENU_LEVEL.CATEGORIES
+      ? `Gestos: mostre de 1 a ${optionCount} dedos para escolher a categoria.`
+      : `Gestos: 1 a ${optionCount} dedos escolhem o assunto · punho fechado volta.`;
+}
+
+function selectCategoryByTouch(categoryId) {
+  gestureMenu.selectCategoryByTouch(categoryId);
+  selectCategory(categoryId);
+  renderGestureLevel();
+}
+
 function renderCategories() {
   els.categories.replaceChildren();
 
-  for (const category of knowledge.categories) {
+  knowledge.categories.forEach((category, index) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "category";
     button.dataset.category = category.id;
     button.setAttribute("role", "tab");
     button.setAttribute("aria-selected", "false");
+
+    const number = gestureNumberFor(index, MAX_GESTURE_CATEGORIES);
+    if (number !== null) button.append(createGestureBadge(number));
 
     const label = document.createElement("span");
     label.className = "category__label";
@@ -135,29 +169,98 @@ function renderCategories() {
     hint.textContent = category.hint;
 
     button.append(label, hint);
-    button.addEventListener("click", () => selectCategory(category.id));
+    button.addEventListener("click", () => selectCategoryByTouch(category.id));
     els.categories.append(button);
-  }
+  });
 }
 
-async function boot() {
+function handleGestureSelection(fingers) {
+  const action = gestureMenu.apply(fingers);
+
+  switch (action.type) {
+    case "category":
+      selectCategory(action.categoryId);
+      showNotice(`${categoryLabel(action.categoryId)} · agora escolha o assunto`);
+      break;
+    case "topic":
+      setAnswer(action.topicId, { fromGesture: true });
+      showNotice(`Gesto · ${labelFor(action.topicId)}`);
+      break;
+    case "back":
+      showNotice("Voltou para as categorias");
+      break;
+    default:
+      showNotice(action.reason);
+  }
+
+  renderGestureLevel();
+}
+
+function findVlibrasAccessButton() {
+  return (
+    document.querySelector("[vw-access-button]") ||
+    document.querySelector("div[vw] .access-button") ||
+    document.querySelector(".vw-access-button") ||
+    document.querySelector("div[vw] img")
+  );
+}
+
+function openVlibrasForAnswer() {
+  els.answerText.classList.add("is-fresh");
+  els.answerText.focus({ preventScroll: false });
+  els.answerText.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  const access = findVlibrasAccessButton();
+  if (access) {
+    access.click();
+  }
+
+  showNotice("VLibras · se o avatar pedir, toque no texto da resposta");
+}
+
+function bindVlibrasCta() {
+  if (!els.openVlibras) return;
+  els.openVlibras.addEventListener("click", openVlibrasForAnswer);
+}
+
+async function loadKnowledge() {
   const response = await fetch("./knowledge.json");
   if (!response.ok) {
     throw new Error(`Falha ao carregar knowledge.json (${response.status})`);
   }
+  return response.json();
+}
 
-  knowledge = await response.json();
+async function boot() {
+  setStatus("loading", "Carregando conteúdo…");
+  knowledge = await loadKnowledge();
   els.disclaimer.textContent = knowledge.meta.disclaimer;
+
+  gestureMenu = createGestureMenu({
+    categoryIds: knowledge.categories.map((category) => category.id),
+    topicsByCategory: CATEGORY_SIGNS,
+  });
 
   renderCategories();
   selectCategory(knowledge.categories[0].id);
+  renderGestureLevel();
   setAnswer("ola");
+  bindVlibrasCta();
+
+  setStatus("loading", "Procurando a câmera de gestos…");
+  startGestureFeed({
+    url: GESTURE_STATE_URL,
+    onState: ({ kind, text, progress, detail }) =>
+      setStatus(kind, text, { progress, detail }),
+    onSelection: handleGestureSelection,
+  });
 }
 
 boot().catch((error) => {
-  els.answerTitle.textContent = "Nao foi possivel carregar o preview";
+  setStatus("error", "Não foi possível carregar o conteúdo");
+  els.answerTitle.textContent = "Não foi possível carregar o preview";
   els.answerText.textContent =
-    "Abra esta pagina por um servidor local (por exemplo: python -m http.server). " +
+    "Abra esta página por um servidor local (por exemplo: python -m http.server). " +
     "Abrir o arquivo direto no navegador bloqueia o carregamento do knowledge.json.";
   els.answerDate.textContent = "";
   console.error(error);

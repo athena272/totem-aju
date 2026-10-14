@@ -55,3 +55,32 @@ SAMPLES_DIRNAME: Final[str] = "samples"
 # --- Numero minimo de repeticoes recomendado por sinal e sinalizador --------
 
 MIN_REPETITIONS_PER_SIGN: Final[int] = 20
+
+# --- Menu por dedos ---------------------------------------------------------
+
+#: Diretorio servido pelo preview. O estado dos gestos e gravado nele para que
+#: o site o leia pelo mesmo servidor local.
+PREVIEW_DIR: Final[Path] = Path("preview")
+
+#: Arquivo com o estado da camera de gestos, lido pelo preview por polling.
+GESTURE_STATE_FILENAME: Final[str] = "gesture_state.json"
+
+#: Tempo que a contagem de dedos precisa ficar parada para virar uma escolha.
+MENU_HOLD_SECONDS: Final[float] = 1.0
+
+#: Tempo sem mao no quadro para liberar a repeticao do mesmo numero. Curto o
+#: bastante para ser natural, longo o bastante para ignorar falhas de deteccao
+#: de um ou dois quadros.
+MENU_RELEASE_SECONDS: Final[float] = 0.4
+
+#: Intervalo minimo entre gravacoes do estado, para nao escrever a cada quadro.
+GESTURE_STATE_MIN_INTERVAL_SECONDS: Final[float] = 0.15
+
+#: Maior contagem de dedos aceita pelo menu (uma mao).
+MAX_FINGER_COUNT: Final[int] = 5
+
+
+# Suavização temporal e heurísticas de visão
+ALPHA_SUAVIZACAO_LANDMARKS: float = 0.5
+LIMIAR_ANGULO_DEDO_ABERTO: float = 140.0
+LIMIAR_ANGULO_POLEGAR_ABERTO: float = 150.0

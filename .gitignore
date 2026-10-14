@@ -42,6 +42,10 @@ htmlcov/
 *.onnx
 *.ckpt
 
+# Estado da camera de gestos, gerado pelo totem-menu enquanto ele roda.
+/preview/gesture_state.json
+/preview/gesture_state.json.tmp
+
 # Segredos
 .env
 .env.*
