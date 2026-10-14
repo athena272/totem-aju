@@ -59,6 +59,23 @@ jobs:
       - name: Rodar testes
         run: pytest -v
 
+  preview:
+    name: Testes do preview (JavaScript)
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # Sem dependencias: os testes usam o runner nativo do Node (node --test).
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Rodar testes do menu por dedos
+        working-directory: preview
+        run: npm test
+
   integracao:
     name: Integracao com MediaPipe
     runs-on: ubuntu-24.04
@@ -101,3 +118,6 @@ jobs:
 
       - name: Verificar entrypoint do CLI
         run: totem-capture --list-signs
+
+      - name: Verificar entrypoint do menu por dedos
+        run: totem-menu --help
