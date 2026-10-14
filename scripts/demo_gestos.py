@@ -1,6 +1,7 @@
 """Script de demonstração: integra as heurísticas 3D com a webcam do Totem Aju."""
 
 import cv2
+
 from totem_aju.vision.camera import OpenCVCamera
 from totem_aju.vision.heuristics import (
     avaliar_dedos,
