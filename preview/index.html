@@ -24,7 +24,7 @@
         <p class="brand__place">Aracaju · Sergipe</p>
         <h1 class="brand__name">Totem Aju</h1>
         <p class="brand__tagline">
-          Informação turística em texto e em Libras.
+          Demo local: informação turística em texto e em Libras.
         </p>
       </header>
 
@@ -32,9 +32,12 @@
         <div class="panel panel--guide">
           <h2 class="panel__title">Escolha um tema</h2>
           <p class="panel__lead">
-            Toque em uma categoria e depois no assunto. A resposta aparece em
-            português; o avatar do VLibras sinaliza em Libras.
+            Toque ou mostre o número de dedos indicado em cada opção, com a mão
+            parada. A resposta aparece em português; o botão
+            <strong>Ver em Libras</strong> abre o avatar do VLibras.
           </p>
+
+          <p id="gesture-level" class="gesture-level"></p>
 
           <div
             id="categories"
@@ -62,24 +65,49 @@
           </h2>
 
           <p id="answer-text" class="answer-text" tabindex="0">
-            Toque em um tema ao lado para ver uma resposta. Depois, abra o
-            VLibras no canto da tela e toque neste texto para ver a sinalização
-            em Libras.
+            Toque em um tema ao lado para ver uma resposta. Depois, use o botão
+            amarelo abaixo para ver a mesma informação em Libras.
           </p>
 
+          <button type="button" id="open-vlibras" class="vlibras-cta">
+            <span class="vlibras-cta__icon" aria-hidden="true">LS</span>
+            <span class="vlibras-cta__copy">
+              <strong class="vlibras-cta__title">Ver em Libras</strong>
+              <span class="vlibras-cta__hint"
+                >Abre o VLibras e destaca o texto para o avatar sinalizar</span
+              >
+            </span>
+          </button>
+
           <ol class="howto">
-            <li>Abra o botão azul do <strong>VLibras</strong> no canto.</li>
-            <li>Toque no <strong>texto da resposta</strong> acima.</li>
-            <li>O avatar sinaliza a mesma informação em Libras.</li>
+            <li>Toque em <strong>Ver em Libras</strong> (botão amarelo).</li>
+            <li>
+              Se o avatar pedir, toque de novo no
+              <strong>texto da resposta</strong> acima.
+            </li>
+            <li>O avatar sinaliza a informação em Libras.</li>
           </ol>
 
           <p class="disclaimer" id="disclaimer"></p>
         </div>
       </section>
 
-      <footer class="status">
+      <aside class="vlibras-beacon" aria-hidden="true">
+        <span class="vlibras-beacon__label">VLibras aqui →</span>
+      </aside>
+
+      <footer id="status" class="status" data-state="loading">
         <span class="status__dot" aria-hidden="true"></span>
-        <span>Preview demonstrativo · reconhecimento de sinais em desenvolvimento</span>
+        <span id="status-text">Carregando…</span>
+        <span class="status__progress" aria-hidden="true">
+          <span id="status-progress-fill" class="status__progress-fill"></span>
+        </span>
+        <span
+          id="status-notice"
+          class="status__notice"
+          role="status"
+          aria-live="polite"
+        ></span>
       </footer>
     </main>
 
