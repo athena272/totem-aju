@@ -63,6 +63,50 @@ Isso não é preciosismo arquitetural; resolve três problemas concretos:
 | `data/manifest.py` | Registro persistente das amostras | O que é um landmark |
 | `data/recorder.py` | Orquestrar captura para o disco | MediaPipe (recebe o Protocol) |
 | `cli/capture.py` | Interação com o operador da coleta | Regras de normalização |
+| `vision/heuristics.py` | Dedos abertos por geometria 3D dos landmarks | Webcam, menu, site |
+| `menu/selector.py` | Confirmar uma contagem mantida parada | Webcam, disco, significado do número |
+| `menu/state.py` | Gravar o estado da câmera para o preview | Categorias e assuntos do site |
+| `menu/session.py` | Loop câmera → contagem → escolha → estado | MediaPipe (recebe o Protocol) |
+| `cli/menu.py` | Janela com retorno visual e mensagens de erro | Regras de confirmação |
+| `preview/js/gesture-menu.js` | Significado do número em cada nível do menu | Webcam, Python |
+
+## Menu por dedos
+
+O menu por dedos liga a webcam ao preview sem servidor de aplicação. O Python
+só percebe a mão: conta os dedos, confirma a contagem mantida parada por cerca
+de 1 segundo e grava o estado em `preview/gesture_state.json`. O site lê esse
+arquivo por polling e decide o que o número significa no nível atual do menu.
+Assim, mudar categorias ou assuntos no `knowledge.json` não exige mudar o Python.
+
+```mermaid
+flowchart LR
+    Cam[Webcam] --> Ext[MediaPipeHolisticExtractor]
+    Ext --> Counter[HeuristicFingerCounter]
+    Counter --> Sel[FingerHoldSelector]
+    Sel --> Pub[GestureStatePublisher]
+    Pub -->|"escrita atômica"| File["preview/gesture_state.json"]
+    File -->|"polling 250 ms"| Feed["gesture-feed.js"]
+    Feed --> Menu["gesture-menu.js"]
+    Menu --> App["app.js"]
+```
+
+Decisões que evitam falhas difíceis de reproduzir:
+
+- **Tempo, não quadros.** O MediaPipe Holistic em CPU roda de 7 a 20 quadros por
+  segundo conforme o computador. O tempo de segurar é medido em segundos, para
+  ser o mesmo em qualquer máquina.
+- **Trava contra repetição.** Depois de escolher um número, o mesmo número só
+  vale de novo quando a mão sai do quadro. Sem isso, quem escolhe a categoria 3
+  e continua com a mão parada escolheria o assunto 3 sem querer.
+- **Escrita atômica com nova tentativa.** O estado é gravado num arquivo
+  temporário e substituído de uma vez, para o site nunca ler um JSON pela metade.
+  No Windows, a substituição falha por alguns milissegundos enquanto o servidor
+  lê o arquivo; o publisher tenta de novo antes de desistir.
+- **Escolha com identificador.** Cada escolha tem um `event_id` e continua no
+  arquivo nas gravações seguintes. Uma gravação perdida não perde a escolha, e o
+  site aplica cada uma só uma vez, inclusive ao recarregar a página.
+- **Sempre há retorno.** O rodapé do site mostra se a câmera está iniciando,
+  procurando a mão, segurando, sem resposta, encerrada ou com erro.
 
 ## Por que normalizar os landmarks
 

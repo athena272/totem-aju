@@ -115,8 +115,8 @@ teve baixa taxa de detecção, indicando enquadramento ruim.
 ## Preview do totem (apresentável agora)
 
 Há um protótipo visual em [`preview/`](preview/) com categorias, respostas
-curadas de Aracaju e o widget oficial do **VLibras**. Ainda **não** reconhece
-sinais pela webcam — simula o sentido *totem → usuário*.
+curadas de Aracaju e o widget oficial do **VLibras**. A navegação funciona por
+toque e, opcionalmente, pelo **menu por dedos** (seção abaixo).
 
 Na pasta do projeto:
 
@@ -128,11 +128,40 @@ python -m http.server 8080
 Abra `http://localhost:8080` no navegador. Depois:
 
 1. escolha uma categoria e um tema;
-2. abra o botão azul do VLibras no canto;
-3. toque no texto da resposta para o avatar sinalizar em Libras.
+2. toque em **Ver em Libras** (botão amarelo);
+3. se o avatar pedir, toque no texto da resposta para ele sinalizar em Libras.
 
 Não abra o `index.html` direto pelo Explorer: o navegador bloqueia o
 `knowledge.json` sem um servidor local.
+
+### Menu por dedos
+
+Com o preview aberto, rode num **segundo terminal**, na raiz do projeto:
+
+```powershell
+totem-menu
+```
+
+Uma janela mostra a webcam, a contagem de dedos e uma barra de "segurando".
+Mantenha a mão parada por cerca de 1 segundo para confirmar a escolha:
+
+| Onde você está | Gesto | Efeito |
+| --- | --- | --- |
+| Categorias | 1 a 4 dedos | Abre a categoria com aquele número |
+| Assuntos | 1 a 5 dedos | Mostra a resposta do assunto com aquele número |
+| Assuntos | Punho fechado | Volta para as categorias |
+
+Para repetir o mesmo número (por exemplo, categoria 2 e depois assunto 2),
+abaixe a mão antes. Assuntos sem número (como Dinheiro e Hotel) continuam só por
+toque. O rodapé do site mostra o estado da câmera: iniciando, procurando a mão,
+segurando, desligada ou com erro. Sem o `totem-menu` rodando, o site funciona
+normalmente por toque.
+
+Opções úteis: `--camera 1` (outra webcam) e `--hold-seconds 1.5` (tempo para
+confirmar). `q` ou `ESC` na janela encerra.
+
+O `totem-menu` conversa com o site gravando `preview/gesture_state.json`
+(ignorado pelo git), que o site lê a cada 250 ms.
 
 ## Desenvolvimento
 
@@ -142,6 +171,14 @@ então roda em qualquer máquina da equipe:
 ```powershell
 pip install -r requirements-dev.txt
 pytest
+```
+
+Os testes do preview (JavaScript) usam o runner nativo do Node 22+, sem
+dependências:
+
+```powershell
+cd preview
+npm test
 ```
 
 Lint e formatação:
@@ -154,7 +191,7 @@ ruff format .
 ### Integração contínua
 
 O [workflow de CI](.github/workflows/ci.yml) roda a cada push na `main` e em todo
-pull request, em dois jobs:
+pull request, em três jobs:
 
 **`qualidade`** — lint, formatação e testes, no Ubuntu e no Windows. Instala
 apenas `requirements-dev.txt`, **sem MediaPipe e sem OpenCV**. Isso é
@@ -169,12 +206,15 @@ biblioteca nativa carrega, que o extractor concreto satisfaz o contrato e que o
 vetor produzido tem o formato esperado. Também falha se `opencv-python` for
 reintroduzido junto de `opencv-contrib-python`.
 
+**`preview`** — roda os testes JavaScript do menu por dedos com `node --test`.
+
 Antes de abrir um pull request, rode localmente o mesmo que o CI roda:
 
 ```powershell
 ruff check .
 ruff format --check .
 pytest
+cd preview; npm test
 ```
 
 ### Estrutura
@@ -191,17 +231,29 @@ src/totem_aju/
     camera.py                 Protocol FrameSource + webcam via OpenCV
     normalization.py          funções puras de normalização geométrica
     sequence.py               janela temporal e reamostragem
+    heuristics.py             contagem de dedos e gestos por geometria 3D
+    smoothing.py              suavização temporal dos landmarks e dos dedos
+  menu/
+    selector.py               confirma a contagem mantida parada (lógica pura)
+    counter.py                contagem de dedos sobre as heurísticas
+    state.py                  estado da câmera → preview/gesture_state.json
+    session.py                loop câmera → contagem → escolha → estado
   data/
     manifest.py               índice das amostras em JSON Lines
     recorder.py               orquestra captura → disco
   cli/
     capture.py                interface de coleta
+    menu.py                   totem-menu: webcam + janela do menu por dedos
 preview/
   index.html                  tela apresentável do totem
   styles.css / app.js         interface e interação
+  js/                         catálogo, menu de dois níveis e leitura do estado
+  tests/                      testes do preview (node --test)
   knowledge.json              respostas turísticas curadas
 scripts/
   smoke_mediapipe.py          verificação do ambiente completo (fora da suíte)
+  demo_gestos.py              demonstração das heurísticas de gestos
+  camera_base.py              abre a webcam numa janela (teste rápido)
 ```
 
 O MediaPipe e o OpenCV ficam atrás de `Protocol`, com import preguiçoso nas
