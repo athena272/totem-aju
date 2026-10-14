@@ -1,4 +1,5 @@
 """Camada de visao computacional: extracao e preparo de landmarks."""
+
 from totem_aju.vision.heuristics import (
     avaliar_dedos,
     reconhecer_gesto,

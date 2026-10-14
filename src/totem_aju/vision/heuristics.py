@@ -14,7 +14,9 @@ from totem_aju.vocabulary import is_known_sign
 LandmarkArray = NDArray[np.float32]
 
 
-def calcular_angulo_3d(p1: LandmarkArray, p2: LandmarkArray, p3: LandmarkArray) -> float:
+def calcular_angulo_3d(
+    p1: LandmarkArray, p2: LandmarkArray, p3: LandmarkArray
+) -> float:
     """Calcula o ângulo em graus na articulação p2 formada por (p1 -> p2 -> p3)."""
     v1 = np.array(p1, dtype=float) - np.array(p2, dtype=float)
     v2 = np.array(p3, dtype=float) - np.array(p2, dtype=float)
@@ -117,7 +119,7 @@ def avaliar_dedos(lm_list: LandmarkArray) -> tuple[list[int], list[str]]:
     juntas = [(5, 6, 8), (9, 10, 12), (13, 14, 16), (17, 18, 20)]
     nomes = ["Ind", "Med", "Anl", "Min"]
 
-    for (base, dobra, ponta), nome in zip(juntas, nomes):
+    for (base, dobra, ponta), nome in zip(juntas, nomes, strict=True):
         pistas, d_ponta = pistas_do_dedo(lm_list, base, dobra, ponta, tamanho_mao)
         aberto = 1 if sum(pistas) >= 2 else 0
         fingers.append(aberto)
@@ -144,7 +146,9 @@ def reconhecer_gesto(fingers: list[int], lm_list: LandmarkArray) -> str:
     padrao = tuple(fingers)
 
     tamanho_mao = distancia(lm_list[0], lm_list[9], usar_z=True)
-    dist_normalizada = distancia(lm_list[4], lm_list[8], usar_z=True) / (tamanho_mao + 1e-6)
+    dist_normalizada = distancia(lm_list[4], lm_list[8], usar_z=True) / (
+        tamanho_mao + 1e-6
+    )
 
     if dist_normalizada < 0.38 and middle == 1 and ring == 1 and pinky == 1:
         return "OK"
@@ -152,7 +156,7 @@ def reconhecer_gesto(fingers: list[int], lm_list: LandmarkArray) -> str:
     if padrao == (1, 0, 0, 0, 0):
         if lm_list[4][1] < lm_list[2][1] - 0.02:
             return "Joinha (cima)"
-        elif lm_list[4][1] > lm_list[2][1] + 0.02:
+        if lm_list[4][1] > lm_list[2][1] + 0.02:
             return "Joinha (baixo)"
         return "Polegar"
 

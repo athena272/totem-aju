@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict, deque
+
 import numpy as np
 from numpy.typing import NDArray
 
@@ -14,11 +15,15 @@ class TemporalGestureFilter:
 
     def __init__(self, alpha: float = 0.5) -> None:
         self.alpha = alpha
-        self.landmarks_suavizados: dict[str, LandmarkArray | None] = defaultdict(lambda: None)
+        self.landmarks_suavizados: dict[str, LandmarkArray | None] = defaultdict(
+            lambda: None
+        )
         self.historico_dedos: dict[str, deque[tuple[int, ...]]] = defaultdict(
             lambda: deque(maxlen=6)
         )
-        self.historico_gestos: dict[str, deque[str]] = defaultdict(lambda: deque(maxlen=8))
+        self.historico_gestos: dict[str, deque[str]] = defaultdict(
+            lambda: deque(maxlen=8)
+        )
         self.historico_contagem: deque[int] = deque(maxlen=5)
 
     def suavizar_landmarks(self, chave: str, lm_list: LandmarkArray) -> LandmarkArray:
@@ -28,7 +33,9 @@ class TemporalGestureFilter:
         if anterior is None or anterior.shape != atual.shape:
             suavizado = atual
         else:
-            suavizado = (self.alpha * atual + (1 - self.alpha) * anterior).astype(np.float32)
+            suavizado = (self.alpha * atual + (1 - self.alpha) * anterior).astype(
+                np.float32
+            )
 
         self.landmarks_suavizados[chave] = suavizado
         return suavizado
