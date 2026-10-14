@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Totem Aju - Relatório parcial</title>
+<style>
+  @page {
+    size: A4;
+    margin: 22mm 20mm 20mm 20mm;
+    @bottom-center {
+      content: counter(page);
+      font-family: "Segoe UI", Calibri, Arial, sans-serif;
+      font-size: 9pt;
+      color: #6b7280;
+    }
+  }
+  @page :first {
+    @bottom-center { content: none; }
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: "Segoe UI", Calibri, Arial, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.5;
+    color: #1f2933;
+    margin: 0;
+    counter-reset: h2;
+  }
+
+  p { margin: 0 0 8pt; text-align: justify; hyphens: auto; }
+  ul, ol { margin: 0 0 8pt; padding-left: 18pt; }
+  li { margin-bottom: 3pt; }
+  code {
+    font-family: Consolas, "Cascadia Mono", monospace;
+    font-size: 9pt;
+    background: #eef2f5;
+    padding: 0 3pt;
+    border-radius: 3px;
+  }
+  pre {
+    font-family: Consolas, "Cascadia Mono", monospace;
+    font-size: 8.5pt;
+    line-height: 1.4;
+    background: #f4f6f8;
+    border: 1px solid #dde3e8;
+    border-radius: 4px;
+    padding: 8pt 10pt;
+    white-space: pre-wrap;
+    break-inside: avoid;
+    margin: 0 0 10pt;
+  }
+  a { color: #1f5f8b; text-decoration: none; }
+
+  /* ---------- capa ---------- */
+  .cover {
+    height: 252mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    break-after: page;
+  }
+  .cover .inst { font-size: 11pt; line-height: 1.6; letter-spacing: 0.02em; }
+  .cover .inst strong { font-size: 12pt; }
+  .cover .title-block { margin-top: 40mm; }
+  .cover .kicker {
+    font-size: 10pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #2f7d73;
+    margin-bottom: 6pt;
+  }
+  .cover h1 {
+    font-size: 30pt;
+    margin: 0 0 8pt;
+    color: #12303a;
+    counter-increment: none;
+  }
+  .cover h1::before { content: none; }
+  .cover .subtitle { font-size: 13pt; color: #3e4c59; max-width: 140mm; margin: 0 auto; text-align: center; }
+  .cover .team { font-size: 10.5pt; line-height: 1.7; }
+  .cover .team .label { font-weight: 600; margin-bottom: 4pt; }
+  .cover .place { font-size: 10.5pt; }
+
+  /* ---------- sumário ---------- */
+  .toc { break-after: page; }
+  .toc h2 { counter-increment: none; }
+  .toc h2::before { content: none; }
+  .toc ol { list-style: none; padding-left: 0; }
+  .toc li { margin: 4pt 0; }
+  .toc ol ol { padding-left: 16pt; font-size: 10pt; color: #3e4c59; }
+
+  /* ---------- títulos numerados ---------- */
+  h2 {
+    font-size: 15pt;
+    color: #12303a;
+    margin: 20pt 0 8pt;
+    padding-bottom: 3pt;
+    border-bottom: 2px solid #2f7d73;
+    counter-increment: h2;
+    counter-reset: h3;
+    break-after: avoid;
+  }
+  h2::before { content: counter(h2) ". "; }
+  h2.unnumbered { counter-increment: none; }
+  h2.unnumbered::before { content: none; }
+  h3 {
+    font-size: 12pt;
+    color: #1f4e5a;
+    margin: 14pt 0 6pt;
+    counter-increment: h3;
+    break-after: avoid;
+  }
+  h3::before { content: counter(h2) "." counter(h3) " "; }
+
+  /* ---------- tabelas ---------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4pt 0 12pt;
+    font-size: 9.5pt;
+    break-inside: avoid;
+  }
+  table.breakable { break-inside: auto; }
+  table.breakable tr { break-inside: avoid; }
+  th, td {
+    border: 1px solid #d3dae0;
+    padding: 3pt 6pt;
+    line-height: 1.35;
+    vertical-align: top;
+    text-align: left;
+  }
+  th { background: #e6f0ee; color: #12303a; font-weight: 600; }
+  tr:nth-child(even) td { background: #f8fafb; }
+  caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 9pt;
+    color: #52606d;
+    margin-bottom: 4pt;
+  }
+
+  /* ---------- figuras ---------- */
+  figure { margin: 6pt 0 14pt; break-inside: avoid; text-align: center; }
+  figure img { width: 100%; border: 1px solid #d3dae0; border-radius: 4px; }
+  figcaption { font-size: 9pt; color: #52606d; margin-top: 4pt; text-align: center; }
+
+  /* ---------- diagramas ---------- */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4pt;
+  }
+  .node {
+    border: 1.5px solid #2f7d73;
+    background: #eef6f4;
+    border-radius: 5px;
+    padding: 5pt 7pt;
+    font-size: 8.5pt;
+    line-height: 1.3;
+    text-align: center;
+    min-width: 62pt;
+  }
+  .node small { display: block; color: #52606d; font-size: 7.5pt; }
+  .node.alt { border-color: #b7892c; background: #fbf4e4; }
+  .node.out { border-color: #1f5f8b; background: #e9f1f8; }
+  .arrow { color: #2f7d73; font-size: 13pt; font-weight: 700; }
+
+  .layers { display: flex; gap: 8pt; align-items: stretch; }
+  .layer {
+    flex: 1;
+    border: 1.5px dashed #9aa5b1;
+    border-radius: 6px;
+    padding: 6pt;
+  }
+  .layer h4 {
+    margin: 0 0 6pt;
+    font-size: 9pt;
+    text-align: center;
+    color: #12303a;
+  }
+  .layer .node { margin: 0 auto 4pt; width: 100%; }
+  .layer .down { text-align: center; color: #2f7d73; font-weight: 700; line-height: 1; margin-bottom: 4pt; }
+
+  .tensor {
+    display: flex;
+    justify-content: center;
+    gap: 2pt;
+    margin: 4pt 0;
+  }
+  .tensor div {
+    border: 1.5px solid #2f7d73;
+    padding: 5pt 4pt;
+    font-size: 8.5pt;
+    text-align: center;
+  }
+  .tensor .lh { background: #eef6f4; flex: 63; }
+  .tensor .rh { background: #e9f1f8; flex: 63; border-color: #1f5f8b; }
+  .tensor .po { background: #fbf4e4; flex: 99; border-color: #b7892c; }
+
+  .note {
+    border-left: 4px solid #b7892c;
+    background: #fbf4e4;
+    padding: 6pt 10pt;
+    margin: 6pt 0 12pt;
+    font-size: 10pt;
+    break-inside: avoid;
+  }
+  .note p:last-child { margin-bottom: 0; }
+
+  .two-col { display: flex; gap: 10pt; }
+  .two-col > * { flex: 1; }
+
+  .refs { font-size: 9.5pt; }
+  .refs li { margin-bottom: 3pt; text-align: left; }
+  .keep { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ======================= CAPA ======================= -->
+<section class="cover">
+  <div class="inst">
+    <strong>UNIVERSIDADE FEDERAL DE SERGIPE</strong><br>
+    Departamento de Computação (DCOMP)<br>
+    Fundamentos da Inteligência Artificial<br>
+    Prof. Victor Flávio
+  </div>
+
+  <div class="title-block">
+    <div class="kicker">Relatório de entrega parcial</div>
+    <h1>Totem Aju</h1>
+    <p class="subtitle">Totem interativo de acessibilidade comunicacional em Libras
+      para turistas surdos em Aracaju, com reconhecimento de sinais por visão computacional</p>
+  </div>
+
+  <div class="team">
+    <div class="label">Equipe</div>
+    Breno Murilo Alexandre Reis Santos - 202100022701<br>
+    Guilherme Rosário Alves - 202100022784<br>
+    James Pereira Matos - 202200014130<br>
+    João Filipe de Araujo Santos Rezende - 202100011548<br>
+    Manoel Victor Lima Monteiro - 202000012972
+  </div>
+
+  <div class="place">São Cristóvão - SE<br>14 de outubro de 2026</div>
+</section>
+
+<!-- ======================= SUMÁRIO ======================= -->
+<section class="toc">
+  <h2>Sumário</h2>
+  <ol>
+    <li>1. Introdução</li>
+    <li>2. Objetivos e recorte do problema
+      <ol>
+        <li>2.1 Os dois sentidos da comunicação</li>
+        <li>2.2 Vocabulário fechado</li>
+        <li>2.3 O totem como agente (PEAS)</li>
+      </ol>
+    </li>
+    <li>3. Decisões técnicas
+      <ol>
+        <li>3.1 Plataforma: Python, MediaPipe e VLibras</li>
+        <li>3.2 Landmarks em vez de pixels</li>
+      </ol>
+    </li>
+    <li>4. Arquitetura do sistema</li>
+    <li>5. Estruturação dos dados
+      <ol>
+        <li>5.1 Vocabulário (rótulos)</li>
+        <li>5.2 Representação de um quadro</li>
+        <li>5.3 Normalização geométrica</li>
+        <li>5.4 Janela temporal e reamostragem</li>
+        <li>5.5 Armazenamento e manifesto</li>
+        <li>5.6 Protocolo de coleta</li>
+        <li>5.7 Protocolo de avaliação</li>
+        <li>5.8 Situação atual dos dados</li>
+      </ol>
+    </li>
+    <li>6. O que já funciona
+      <ol>
+        <li>6.1 Menu por dedos</li>
+        <li>6.2 Preview do totem com VLibras</li>
+        <li>6.3 Qualidade de software</li>
+      </ol>
+    </li>
+    <li>7. Ética, terminologia e riscos</li>
+    <li>8. Cronograma e próximos passos</li>
+    <li>9. Declaração de uso de IA generativa</li>
+    <li>Referências</li>
+  </ol>
+</section>
+
+<!-- ======================= 1 ======================= -->
+<h2>Introdução</h2>
+
+<p>Pessoas surdas que visitam Aracaju não têm como obter informação turística
+básica, como onde fica um banheiro, como chegar à Orla de Atalaia ou qual ônibus
+tomar, em sua própria língua. A acessibilidade comunicacional em espaços públicos
+não é uma cortesia: é obrigação prevista na Lei de Libras (Lei nº 10.436/2002), no
+Decreto nº 5.626/2005, que a regulamenta, e na Lei Brasileira de Inclusão (Lei
+nº 13.146/2015).</p>
+
+<p>O <strong>Totem Aju</strong> é um totem interativo, composto por monitor com
+tela sensível ao toque, webcam e computador, que responde perguntas turísticas
+de pessoas surdas. O projeto se insere na linha de <strong>visão
+computacional</strong> aplicada ao <strong>fomento ao turismo e à preservação
+cultural</strong> de Sergipe.</p>
+
+<p>Este relatório descreve o estado do projeto na entrega parcial: o recorte do
+problema, as decisões técnicas, a arquitetura, a estruturação dos dados (núcleo
+desta etapa), o que já está funcionando, os riscos éticos identificados e o
+planejamento até a entrega final. O código-fonte está no repositório
+<a href="https://github.com/athena272/totem-aju">github.com/athena272/totem-aju</a>.</p>
+
+<!-- ======================= 2 ======================= -->
+<h2>Objetivos e recorte do problema</h2>
+
+<p><strong>Objetivo geral.</strong> Construir um protótipo funcional de totem que
+permita a um turista surdo obter informações turísticas de Aracaju sinalizando em
+Libras e receber a resposta em texto e em Libras.</p>
+
+<p><strong>Objetivos específicos.</strong></p>
+<ul>
+  <li>extrair e normalizar <em>landmarks</em> de mãos e corpo em tempo real, em CPU;</li>
+  <li>montar um dataset rotulado de sinais do domínio turístico, com divisão por sinalizador;</li>
+  <li>treinar e avaliar um classificador temporal sobre esse dataset;</li>
+  <li>integrar o reconhecimento a uma interface de quiosque com base de conhecimento curada e avatar VLibras;</li>
+  <li>validar o protótipo com pessoas surdas ou intérpretes de Libras.</li>
+</ul>
+
+<h3>Os dois sentidos da comunicação</h3>
+
+<table>
+  <tr><th style="width:28%">Sentido</th><th>Solução adotada</th></tr>
+  <tr><td>Turista surdo para o totem</td><td>Reconhecimento de sinais em Libras por visão computacional. É a contribuição técnica deste trabalho.</td></tr>
+  <tr><td>Totem para o turista surdo</td><td>Resposta em texto em português e tradução para Libras pelo <strong>VLibras</strong> (iniciativa do governo federal, desenvolvida pelo LAViD/UFPB), exibida num avatar 3D.</td></tr>
+</table>
+
+<h3>Vocabulário fechado</h3>
+
+<p>O reconhecimento de Libras <strong>contínua e irrestrita</strong> é um
+problema de pesquisa aberto: envolve segmentar sinais num fluxo contínuo,
+expressões faciais gramaticais, classificadores manuais e concordância espacial.
+Não é viável num semestre, e uma tentativa nessa direção resultaria num sistema
+que falha na demonstração.</p>
+
+<p>O recorte adotado é o oposto: um <strong>vocabulário pequeno e fechado de 26
+sinais do domínio turístico</strong>, que funcione de verdade. A interface
+colabora com essa restrição: o usuário escolhe uma categoria e sinaliza apenas a
+palavra-chave, o que reduz o espaço de busca do classificador e aumenta a taxa de
+acerto percebida.</p>
+
+<h3>O totem como agente (PEAS)</h3>
+
+<p>Seguindo a formulação de Russell e Norvig, o totem pode ser descrito como um
+agente que percebe o usuário pela câmera e pela tela de toque e age exibindo
+respostas.</p>
+
+<table>
+  <tr><th style="width:22%">Componente</th><th>Descrição</th></tr>
+  <tr><td><strong>Desempenho</strong></td><td>Acerto na intenção do usuário, tempo até a resposta, número de escolhas erradas, correção factual da informação exibida e satisfação de usuários surdos.</td></tr>
+  <tr><td><strong>Ambiente</strong></td><td>Espaço público turístico (orla, aeroporto, mercados), com iluminação e fundo variáveis, um turista surdo à frente do totem e outras pessoas passando ao fundo.</td></tr>
+  <tr><td><strong>Atuadores</strong></td><td>Tela com o texto em português, avatar do VLibras e indicadores visuais de estado (contagem de dedos, barra de confirmação, rodapé da câmera).</td></tr>
+  <tr><td><strong>Sensores</strong></td><td>Webcam, da qual o MediaPipe extrai os landmarks de mãos e corpo, e a tela sensível ao toque.</td></tr>
+</table>
+
+<p>O ambiente é <strong>parcialmente observável</strong> (oclusão das mãos e ruído
+na detecção dos landmarks), <strong>estocástico</strong> (o mesmo sinal varia entre
+pessoas e repetições), <strong>sequencial</strong> (o menu tem dois níveis e a
+escolha atual depende da anterior), <strong>dinâmico</strong> (a mão se move
+enquanto o agente decide), <strong>contínuo</strong> nas percepções e discreto nas
+ações, e de <strong>agente único</strong> (as pessoas ao fundo são ruído, não
+agentes com quem o totem interage). Por isso o totem é um <strong>agente reativo
+baseado em modelo</strong>: ele mantém estado interno, como o nível atual do menu,
+o histórico recente de dedos e a trava contra repetição de escolhas.</p>
+
+<!-- ======================= 3 ======================= -->
+<h2>Decisões técnicas</h2>
+
+<h3>Plataforma: Python, MediaPipe e VLibras</h3>
+
+<p>Foi sugerida à equipe a adoção do <em>Virtual Human Toolkit</em> (USC-ICT) como
+plataforma base. A avaliação, registrada como <em>Architecture Decision Record</em>
+no repositório, levou ao descarte dessa opção:</p>
+
+<table>
+  <tr><th style="width:50%">Virtual Human Toolkit + Unity</th><th>Python (MediaPipe) + web + VLibras</th></tr>
+  <tr><td>Reconhece e produz <strong>fala</strong>; não tem nenhum componente de reconhecimento de língua de sinais.</td><td>MediaPipe Holistic extrai mãos e corpo em tempo real, em CPU, que é a base do reconhecimento de Libras.</td></tr>
+  <tr><td>Orientado ao inglês, sem suporte a Libras ou português.</td><td>VLibras traduz português para Libras num avatar 3D, sem custo de desenvolvimento.</td></tr>
+  <tr><td>Exige Unity e C#, com licença acadêmica restritiva e dependências antigas.</td><td>Pilha única (Python e web), licença livre, ecossistema padrão de aprendizado de máquina.</td></tr>
+</table>
+
+<p>O raciocínio decisivo é de custo de oportunidade: o toolkit resolveria apenas o
+<em>avatar que responde</em>, que é a parte fácil e já tem solução brasileira
+específica para Libras, e imporia uma plataforma inteira que não contribui para o
+reconhecimento de sinais, onde estão o mérito técnico e o gargalo do cronograma.</p>
+
+<h3>Landmarks em vez de pixels</h3>
+
+<p>Em vez de alimentar o classificador com imagens, o pipeline extrai
+<em>landmarks</em> (coordenadas 3D de pontos das mãos e do corpo) e os normaliza
+geometricamente. Essa representação descarta informação irrelevante para o sinal
+(cor da pele, roupa, fundo, iluminação), reduz a entrada de centenas de milhares de
+pixels para 225 números por quadro e, com isso, reduz drasticamente a quantidade de
+dados necessária para treinar e permite operação em tempo real sem GPU. É também uma
+escolha com benefício de privacidade: o sistema pode persistir só coordenadas,
+nunca imagens.</p>
+
+<!-- ======================= 4 ======================= -->
+<h2>Arquitetura do sistema</h2>
+
+<p>O software se divide em três camadas com fronteiras bem definidas:</p>
+
+<figure>
+  <div class="layers">
+    <div class="layer">
+      <h4>Entrada: o turista sinaliza</h4>
+      <div class="node">Webcam</div>
+      <div class="down">&#8595;</div>
+      <div class="node">LandmarkExtractor<small>MediaPipe Holistic</small></div>
+      <div class="down">&#8595;</div>
+      <div class="node">Normalização<small>translação e escala</small></div>
+      <div class="down">&#8595;</div>
+      <div class="node">SequenceBuffer<small>janela de 32 quadros</small></div>
+      <div class="down">&#8595;</div>
+      <div class="node alt">Classificador temporal<small>a treinar</small></div>
+    </div>
+    <div class="layer">
+      <h4>Domínio: decidir a resposta</h4>
+      <div class="node">Intenção reconhecida<small>um dos 26 sinais</small></div>
+      <div class="down">&#8595;</div>
+      <div class="node">Base de conhecimento curada<small>knowledge.json</small></div>
+      <div class="down">&#8595;</div>
+      <div class="node">Resposta em português<small>com data de verificação</small></div>
+    </div>
+    <div class="layer">
+      <h4>Saída: o totem responde</h4>
+      <div class="node out">Texto na tela</div>
+      <div class="down">+</div>
+      <div class="node out">VLibras<small>avatar em Libras</small></div>
+    </div>
+  </div>
+  <figcaption>Figura 1. Camadas do Totem Aju. O classificador temporal (em amarelo) é a etapa ainda não implementada.</figcaption>
+</figure>
+
+<p><strong>Princípio estruturante: o domínio não conhece a infraestrutura.</strong>
+A lógica de negócio depende de abstrações (<code>Protocol</code> do Python), nunca
+de bibliotecas concretas. O contrato de extração é:</p>
+
+<pre>class LandmarkExtractor(Protocol):
+    def extract(self, frame: NDArray[np.uint8]) -&gt; FrameLandmarks: ...</pre>
+
+<p>Só o módulo <code>mediapipe_extractor.py</code> importa o MediaPipe, e de forma
+preguiçosa. Isso resolve três problemas concretos: o MediaPipe só instala em Python
+3.9 a 3.12, então o restante do código e os testes rodam em qualquer versão; os
+testes não dependem de webcam, porque um extrator falso devolve landmarks
+sintéticos; e a equipe trabalha em paralelo, sem que todos precisem da captura
+configurada.</p>
+
+<table>
+  <caption>Tabela 1. Principais módulos e suas responsabilidades.</caption>
+  <tr><th style="width:32%">Módulo</th><th>Responsabilidade</th></tr>
+  <tr><td><code>vision/schema.py</code></td><td>Estrutura imutável de um quadro de landmarks (<code>FrameLandmarks</code>)</td></tr>
+  <tr><td><code>vision/mediapipe_extractor.py</code></td><td>Adapta o MediaPipe Holistic ao contrato de extração</td></tr>
+  <tr><td><code>vision/normalization.py</code></td><td>Funções puras de normalização geométrica</td></tr>
+  <tr><td><code>vision/sequence.py</code></td><td>Janela temporal deslizante e reamostragem</td></tr>
+  <tr><td><code>vision/heuristics.py</code></td><td>Estado de cada dedo por geometria 3D</td></tr>
+  <tr><td><code>data/recorder.py</code>, <code>data/manifest.py</code></td><td>Captura de amostras para o disco e índice persistente</td></tr>
+  <tr><td><code>menu/*</code>, <code>cli/menu.py</code></td><td>Menu por dedos: contagem, confirmação e publicação do estado</td></tr>
+  <tr><td><code>preview/</code></td><td>Interface web do totem, base curada e VLibras</td></tr>
+</table>
+
+<!-- ======================= 5 ======================= -->
+<h2>Estruturação dos dados</h2>
+
+<p>Esta seção descreve o <strong>contrato de dados</strong> do projeto: o que é
+uma amostra, como ela é representada, normalizada, armazenada e avaliada. Esse
+contrato está implementado e testado; ele é o que permite que coleta, treino e
+inferência usem exatamente o mesmo formato.</p>
+
+<h3>Vocabulário (rótulos)</h3>
+
+<p>A lista canônica está em <code>src/totem_aju/vocabulary.py</code>. Os
+identificadores são estáveis e sem acento, porque ficam gravados no manifesto: um
+rótulo nunca pode ser renomeado depois que houver amostras com ele.</p>
+
+<table>
+  <caption>Tabela 2. Os 26 sinais do vocabulário, por grupo.</caption>
+  <tr><th style="width:24%">Grupo</th><th>Sinais (glosa)</th><th style="width:7%">Qtd.</th></tr>
+  <tr><td>Controle da interação</td><td>OLÁ, OBRIGADO, SIM, NÃO, AJUDA, REPETIR</td><td>6</td></tr>
+  <tr><td>Perguntas</td><td>ONDE, COMO-CHEGAR, QUANTO-CUSTAR, QUE-HORAS</td><td>4</td></tr>
+  <tr><td>Serviços e necessidades</td><td>BANHEIRO, COMER, ÁGUA, HOSPITAL, POLÍCIA, DINHEIRO, HOTEL</td><td>7</td></tr>
+  <tr><td>Transporte</td><td>ÔNIBUS, TÁXI, AEROPORTO</td><td>3</td></tr>
+  <tr><td>Pontos turísticos de Aracaju</td><td>PRAIA, ORLA (de Atalaia), MERCADO, MUSEU, IGREJA, CENTRO (histórico)</td><td>6</td></tr>
+</table>
+
+<h3>Representação de um quadro</h3>
+
+<p>Para cada quadro da câmera, o MediaPipe Holistic devolve 21 landmarks por mão e
+33 landmarks de pose, cada um com coordenadas (x, y, z). O quadro é achatado num
+vetor de <strong>(2 &times; 21 + 33) &times; 3 = 225 valores</strong>:</p>
+
+<figure>
+  <div class="tensor">
+    <div class="lh">mão esquerda<br>21 &times; 3 = 63</div>
+    <div class="rh">mão direita<br>21 &times; 3 = 63</div>
+    <div class="po">pose<br>33 &times; 3 = 99</div>
+  </div>
+  <figcaption>Figura 2. Vetor de características de um quadro (225 valores).</figcaption>
+</figure>
+
+<p>Uma mão não detectada é representada por zeros, acompanhada de um indicador
+booleano (<code>left_hand_detected</code>, <code>right_hand_detected</code>), e não
+por um valor nulo. Assim, todo quadro tem o mesmo formato e o classificador nunca
+recebe entrada de tamanho variável.</p>
+
+<h3>Normalização geométrica</h3>
+
+<p>O MediaPipe devolve coordenadas relativas à imagem: o mesmo sinal produz
+vetores muito diferentes se a pessoa estiver mais à esquerda ou mais longe da
+câmera. Sem tratamento, o modelo gastaria dados aprendendo a ignorar posição e
+distância. Cada mão passa por duas transformações, nesta ordem:</p>
+
+<ol>
+  <li><strong>Translação:</strong> subtrai-se a posição do pulso (ponto 0), que
+    passa a ser a origem. Resultado: invariância à posição da mão na imagem.</li>
+  <li><strong>Escala:</strong> divide-se pela distância entre o pulso e a base do
+    dedo médio (ponto 9). Resultado: invariância ao tamanho aparente da mão, isto é,
+    à distância da pessoa até a câmera.</li>
+</ol>
+
+<p style="text-align:center"><em>p&#770;<sub>i</sub></em> = (<em>p<sub>i</sub></em> &minus; <em>p</em><sub>0</sub>) / &Vert;<em>p</em><sub>9</sub> &minus; <em>p</em><sub>0</sub>&Vert;, &nbsp; para <em>i</em> = 0, ..., 20</p>
+
+<p>A pose <strong>não</strong> é normalizada dessa forma, de propósito: ela carrega
+a informação de <em>onde</em>, em relação ao corpo, o sinal é executado, e a
+Libras usa essa localização como elemento distintivo. As duas propriedades
+(invariância a translação e a escala) são verificadas por testes unitários.</p>
+
+<h3>Janela temporal e reamostragem</h3>
+
+<p>Duas pessoas executam o mesmo sinal em durações diferentes, e a mesma pessoa
+varia entre repetições, mas o classificador exige tensores de formato fixo. Cada
+repetição é capturada por <strong>2,5 s</strong> (cerca de 75 quadros a 30 fps) e
+o <code>SequenceBuffer</code> a reamostra para exatamente <strong>32
+quadros</strong> por interpolação linear no eixo do tempo, preservando o primeiro e
+o último quadro.</p>
+
+<div class="note">
+  <p><strong>Formato final de uma amostra:</strong> um tensor de
+  <strong>32 &times; 225</strong> números em ponto flutuante (32 quadros,
+  225 características por quadro), com um rótulo do vocabulário e o identificador
+  do sinalizador.</p>
+</div>
+
+<h3>Armazenamento e manifesto</h3>
+
+<p>Cada amostra é gravada como um arquivo NumPy em
+<code>data/samples/&lt;sinal&gt;/&lt;sinalizador&gt;_&lt;nnnn&gt;.npy</code>, e uma
+linha é acrescentada ao índice <code>data/manifest.jsonl</code> (formato JSON
+Lines). Exemplo ilustrativo de uma linha:</p>
+
+<pre>{"detection_ratio": 0.97, "n_frames": 32, "recorded_at": "2026-10-20T14:03:11+00:00",
+ "relative_path": "samples/banheiro/s01_0001.npy", "sign": "banheiro", "signer_id": "s01"}</pre>
+
+<ul>
+  <li><strong><code>signer_id</code> é obrigatório</strong>: sem ele, a divisão de
+    treino e teste por pessoa (seção 5.7) seria impossível.</li>
+  <li><strong><code>detection_ratio</code></strong> é a fração de quadros em que
+    alguma mão foi detectada; serve para descartar amostras com enquadramento ruim.</li>
+  <li>O manifesto é <em>append-only</em>: se a coleta for interrompida, perde-se no
+    máximo a última linha, em vez de corromper um arquivo JSON inteiro.</li>
+  <li>O índice do arquivo é derivado do maior índice existente, e não da contagem,
+    para que apagar uma amostra ruim nunca faça uma gravação nova sobrescrever outra.</li>
+  <li>A pasta <code>data/</code> não é versionada no git: os arquivos são grandes e
+    podem conter dados pessoais.</li>
+</ul>
+
+<h3>Protocolo de coleta</h3>
+
+<p>A coleta é feita pela ferramenta de linha de comando
+<code>totem-capture --sign &lt;sinal&gt; --signer &lt;id&gt; --repetitions 20</code>,
+que valida o rótulo contra o vocabulário e avisa quando uma amostra teve baixa taxa
+de detecção. Regras:</p>
+
+<ol>
+  <li><strong>Meta:</strong> no mínimo 20 repetições por sinal e por sinalizador
+    (26 sinais &times; 20 = 520 amostras por pessoa).</li>
+  <li><strong>Enquadramento:</strong> cabeça e tronco visíveis, com folga nas bordas
+    para as mãos; cortar as mãos invalida a amostra.</li>
+  <li><strong>Uma repetição por amostra</strong>, do repouso ao repouso.</li>
+  <li><strong>Variação deliberada</strong> de iluminação, distância, fundo e roupa
+    entre sessões, porque o totem vai operar em condições variáveis.</li>
+  <li><strong>Validação dos sinais</strong> com o Dicionário do INES e, se possível,
+    revisão por intérprete de Libras: sinais inventados pela equipe comprometem o
+    trabalho.</li>
+</ol>
+
+<h3>Protocolo de avaliação</h3>
+
+<p>Dividir treino e teste aleatoriamente por amostra faria repetições da mesma
+pessoa caírem nos dois conjuntos: o modelo aprenderia a reconhecer a pessoa, e a
+acurácia relatada seria artificialmente alta. Por isso a avaliação será
+<strong>agrupada por sinalizador</strong> (validação cruzada
+<em>leave-one-signer-out</em>), e a métrica principal será o desempenho em
+sinalizadores <strong>nunca vistos</strong> no treino. Serão reportados acurácia,
+F1 macro e matriz de confusão, comparando um modelo de referência sobre
+características agregadas no tempo (por exemplo, Random Forest ou SVM no
+scikit-learn) com um classificador temporal (por exemplo, GRU ou CNN 1D em
+PyTorch).</p>
+
+<h3>Situação atual dos dados</h3>
+
+<div class="note">
+  <p>O pipeline de coleta está pronto e testado, mas <strong>a coleta em volume
+  ainda não começou</strong>: no momento não há amostras gravadas, e não há
+  resultados de treino a relatar. Para não depender só de colaboradores da equipe,
+  avaliamos também usar o dataset público <strong>MINDS-Libras</strong> (UFMG,
+  20 sinais, vários sinalizadores), extraindo landmarks dos vídeos com o mesmo
+  pipeline, tanto para pré-treino quanto para comparação de resultados.</p>
+</div>
+
+<!-- ======================= 6 ======================= -->
+<h2>O que já funciona</h2>
+
+<h3>Menu por dedos</h3>
+
+<p>Enquanto o classificador de sinais não é treinado, o totem já pode ser
+navegado com a mão: o usuário mostra de 1 a 5 dedos para escolher uma opção.
+Diferentemente do classificador, que vai <em>aprender</em> a partir de dados, essa
+etapa é uma <strong>abordagem baseada em conhecimento</strong>: regras geométricas
+escritas pela equipe sobre os mesmos landmarks, sem treinamento.</p>
+
+<figure>
+  <div class="flow">
+    <div class="node">Webcam</div><span class="arrow">&#8594;</span>
+    <div class="node">MediaPipe<small>21 pontos da mão</small></div><span class="arrow">&#8594;</span>
+    <div class="node">Suavização<small>média móvel exponencial</small></div><span class="arrow">&#8594;</span>
+    <div class="node">Votação por dedo<small>3 pistas geométricas</small></div><span class="arrow">&#8594;</span>
+    <div class="node">Histerese<small>últimos 6 quadros</small></div><span class="arrow">&#8594;</span>
+    <div class="node">Confirmação<small>1 s parado</small></div><span class="arrow">&#8594;</span>
+    <div class="node out">Site do totem<small>gesture_state.json</small></div>
+  </div>
+  <figcaption>Figura 3. Fluxo do menu por dedos.</figcaption>
+</figure>
+
+<p><strong>Como um dedo é considerado aberto.</strong> Cada dedo recebe três
+pistas independentes, e é considerado aberto quando pelo menos duas concordam
+(votação por maioria):</p>
+
+<table>
+  <tr><th style="width:22%">Dedo</th><th>Pistas (aberto se pelo menos 2 de 3 forem verdadeiras)</th></tr>
+  <tr><td>Indicador, médio, anelar e mínimo</td><td>
+    (1) ângulo na articulação intermediária maior que 140&deg;;
+    (2) desvio de direção entre as duas falanges menor que 55&deg;;
+    (3) distância da ponta ao pulso maior que 1,55 vez o tamanho da mão.</td></tr>
+  <tr><td>Polegar</td><td>
+    (1) ângulo na articulação maior que 150&deg;;
+    (2) distância da ponta à base do indicador maior que 0,5 vez o tamanho da mão;
+    (3) afastamento lateral em relação ao eixo da mão maior que 0,35.</td></tr>
+</table>
+
+<p>O "tamanho da mão" é a distância entre o pulso e a base do dedo médio, a mesma
+referência da normalização, o que torna as regras independentes da distância à
+câmera. Para estabilizar a leitura, os landmarks passam por uma média móvel
+exponencial (&alpha; = 0,5) e o estado de cada dedo passa por uma histerese sobre os
+últimos 6 quadros (aberto se estiver aberto em pelo menos 60% deles, fechado se em
+no máximo 40%).</p>
+
+<p><strong>Decisões de interação.</strong> A escolha só é confirmada depois de a
+contagem ficar parada por <strong>1 segundo</strong>, medido em tempo e não em
+quadros, porque o MediaPipe roda de 7 a 20 quadros por segundo conforme o
+computador. Depois de uma escolha, o mesmo número só vale de novo quando a mão sai
+do quadro por 0,4 s; sem essa trava, quem escolhe a categoria 3 e mantém a mão
+parada escolheria o assunto 3 sem querer. Na tela de assuntos, o punho fechado
+volta às categorias.</p>
+
+<p>O Python só percebe a mão e grava o estado num arquivo JSON (com escrita
+atômica e um identificador por escolha); o site lê esse arquivo a cada 250 ms e
+decide o que o número significa no nível atual do menu. Assim, mudar as categorias
+da base de conhecimento não exige mudar o código de visão.</p>
+
+<h3>Preview do totem com VLibras</h3>
+
+<p>O preview é a interface web do totem. Ela tem 4 categorias (Serviços,
+Transporte, Pontos turísticos e Perguntas), respostas curadas para os 26 temas do
+vocabulário, cada uma com data de verificação, e o widget oficial do VLibras. A
+navegação funciona por toque e, com o <code>totem-menu</code> em execução, pelo
+menu por dedos.</p>
+
+<div class="two-col">
+  <figure>
+    <img src="img/preview-orla.png" alt="Preview do Totem Aju com a resposta sobre a Orla de Atalaia">
+    <figcaption>Figura 4. Categoria Pontos turísticos, assunto 2 (Orla) e a resposta curada. Os números indicam quantos dedos escolhem cada opção.</figcaption>
+  </figure>
+  <figure>
+    <img src="img/preview-vlibras.png" alt="Avatar do VLibras sinalizando a resposta">
+    <figcaption>Figura 5. O avatar do VLibras sinalizando a resposta em Libras, ao lado do texto em português.</figcaption>
+  </figure>
+</div>
+
+<p>A base de conhecimento é curada pela equipe e não é gerada por modelo de
+linguagem. Para informações voláteis, como preços e horários, o totem
+deliberadamente não informa valores e orienta o turista a confirmar no local, em
+vez de arriscar um dado errado.</p>
+
+<h3>Qualidade de software</h3>
+
+<ul>
+  <li><strong>160 casos de teste em Python</strong> (pytest), todos passando,
+    cobrindo normalização, janela temporal, vocabulário, manifesto, gravação,
+    contagem de dedos, confirmação da escolha e sessão do menu. Nenhum exige
+    MediaPipe nem webcam.</li>
+  <li><strong>26 casos de teste em JavaScript</strong> (<code>node --test</code>)
+    para o menu de dois níveis e a leitura do estado da câmera no site.</li>
+  <li><strong>Integração contínua</strong> no GitHub Actions com três jobs:
+    qualidade (lint, formatação e testes em Ubuntu e Windows, sem MediaPipe, o que
+    garante que o domínio não depende da biblioteca), integração (instala o
+    MediaPipe e verifica que o extrator real cumpre o contrato) e preview (testes
+    JavaScript).</li>
+</ul>
+
+<!-- ======================= 7 ======================= -->
+<h2>Ética, terminologia e riscos</h2>
+
+<p><strong>Terminologia.</strong> O trabalho usa "pessoa surda" (e não
+"surdo-mudo"), "pessoa ouvinte" como oposto de surdo e "língua de sinais" ou
+"Libras" (e não "linguagem de sinais"), porque Libras é uma língua com gramática
+própria. A descrição inicial da ideia usava "pessoas surdas e mudas" e foi
+corrigida.</p>
+
+<p><strong>Riscos e mitigações</strong>, alinhados às diretrizes da CAPES/MEC sobre
+uso ético de IA:</p>
+
+<table class="breakable">
+  <thead><tr><th style="width:24%">Risco</th><th style="width:38%">Descrição</th><th>Mitigação</th></tr></thead>
+  <tr><td>Viés do dataset e variação regional</td><td>A Libras varia por região e geração; poucos sinalizadores ensinam ao modelo o estilo dessas poucas pessoas.</td><td>Registrar o sinalizador em toda amostra, buscar o máximo de sinalizadores distintos e declarar a composição do dataset como limitação.</td></tr>
+  <tr><td>Vazamento de dados na avaliação</td><td>Divisão aleatória por amostra infla a acurácia.</td><td>Divisão agrupada por sinalizador; métrica principal em pessoas nunca vistas.</td></tr>
+  <tr><td>Exclusão de quem não sabe Libras</td><td>Nem toda pessoa surda é fluente em Libras.</td><td>Navegação por toque sempre disponível e resposta em texto e em Libras ao mesmo tempo.</td></tr>
+  <tr><td>Alucinação de modelos de linguagem</td><td>Horários, preços ou endereços inventados causam prejuízo real ao turista.</td><td>Respostas restritas a uma base curada, com data de verificação; sem resposta na base, o totem diz que não sabe.</td></tr>
+  <tr><td>Privacidade e imagem</td><td>O totem filma pessoas em espaço público.</td><td>Quadros processados em memória; só landmarks são persistidos; dados de coleta fora do git e com consentimento informado.</td></tr>
+  <tr><td>Falsa sensação de acessibilidade</td><td>O totem pode ser usado como desculpa para não contratar intérpretes.</td><td>Declarar na interface e no artigo que é um recurso complementar, de vocabulário limitado, e não substitui intérprete.</td></tr>
+</table>
+
+<!-- ======================= 8 ======================= -->
+<h2>Cronograma e próximos passos</h2>
+
+<table>
+  <caption>Tabela 3. Cronograma previsto e situação em 14/10/2026.</caption>
+  <tr><th style="width:18%">Período</th><th style="width:42%">Entrega prevista</th><th>Situação</th></tr>
+  <tr><td>até 03/09</td><td>Equipe, tema e justificativa definidos</td><td>Concluído</td></tr>
+  <tr><td>setembro</td><td>Pipeline de extração de landmarks e coleta do dataset</td><td>Pipeline, ferramenta de coleta e testes concluídos; coleta em volume não iniciada</td></tr>
+  <tr><td>outubro</td><td>Treino e avaliação do classificador; integração do VLibras</td><td>VLibras integrado ao preview e menu por dedos funcionando; treino depende dos dados</td></tr>
+  <tr><td>início de novembro</td><td>Montagem do quiosque e testes com usuários surdos</td><td>A fazer</td></tr>
+  <tr><td>23 a 25/11</td><td>Apresentação final e artigo</td><td>A fazer</td></tr>
+</table>
+
+<p><strong>Próximos passos, em ordem de prioridade:</strong></p>
+<ol>
+  <li><strong>Dados:</strong> coletar as amostras com os integrantes e colaboradores,
+    seguindo o protocolo da seção 5.6, e importar o MINDS-Libras pelo mesmo pipeline.
+    Dado é o caminho crítico: sem amostras, nenhuma das etapas seguintes começa.</li>
+  <li><strong>Treino:</strong> treinar o modelo de referência e o classificador
+    temporal sobre os tensores de 32 &times; 225.</li>
+  <li><strong>Avaliação:</strong> validação cruzada por sinalizador, com acurácia,
+    F1 macro e matriz de confusão.</li>
+  <li><strong>Integração:</strong> ligar o classificador ao preview pelo mesmo canal
+    usado pelo menu por dedos, de modo que um sinal reconhecido abra a resposta
+    correspondente.</li>
+  <li><strong>Validação com usuários:</strong> testes com 2 a 3 pessoas surdas ou
+    intérpretes de Libras (setor de acessibilidade da UFS e associações de surdos de
+    Aracaju), registrando acertos, erros e dificuldades.</li>
+</ol>
+
+<!-- ======================= 9 ======================= -->
+<h2>Declaração de uso de IA generativa</h2>
+
+<p>Conforme as diretrizes da CAPES/MEC, a equipe declara que usou assistentes de
+IA generativa como ferramenta de apoio na codificação, na revisão de texto e na
+organização deste relatório. A definição do problema, a modelagem, as decisões
+técnicas, a validação e a análise crítica são da equipe. Os números citados neste
+relatório (dimensões dos dados, parâmetros e quantidade de testes) foram conferidos
+diretamente no código e na execução dos testes, e as referências foram verificadas
+manualmente.</p>
+
+<!-- ======================= REFERÊNCIAS ======================= -->
+<h2 class="unnumbered">Referências</h2>
+
+<ol class="refs">
+  <li>BRASIL. Lei nº 10.436, de 24 de abril de 2002. Dispõe sobre a Língua Brasileira de Sinais - Libras.</li>
+  <li>BRASIL. Decreto nº 5.626, de 22 de dezembro de 2005. Regulamenta a Lei nº 10.436/2002.</li>
+  <li>BRASIL. Lei nº 13.146, de 6 de julho de 2015. Lei Brasileira de Inclusão da Pessoa com Deficiência.</li>
+  <li>RUSSELL, S.; NORVIG, P. <em>Inteligência Artificial: uma abordagem moderna</em>. 4. ed. Rio de Janeiro: GEN LTC, 2022.</li>
+  <li>GOOGLE. MediaPipe Solutions Guide. Disponível em: <a href="https://ai.google.dev/edge/mediapipe/solutions/guide">ai.google.dev/edge/mediapipe/solutions/guide</a>.</li>
+  <li>GOVERNO FEDERAL; LAViD/UFPB. VLibras. Disponível em: <a href="https://www.gov.br/governodigital/pt-br/vlibras">gov.br/governodigital/pt-br/vlibras</a>.</li>
+  <li>REZENDE, T. M. et al. Development and validation of a Brazilian sign language database for human gesture recognition (MINDS-Libras). <em>Neural Computing and Applications</em>, 2021.</li>
+  <li>LAViD/UFPB. V-Librasil: base de dados de sinais da Libras.</li>
+  <li>INSTITUTO NACIONAL DE EDUCAÇÃO DE SURDOS (INES). Dicionário da Língua Brasileira de Sinais.</li>
+  <li>USC INSTITUTE FOR CREATIVE TECHNOLOGIES. Virtual Human Toolkit. Disponível em: <a href="https://github.com/USC-ICT/vhtoolkit">github.com/USC-ICT/vhtoolkit</a>.</li>
+</ol>
+
+</body>
+</html>
