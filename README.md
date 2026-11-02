@@ -163,6 +163,29 @@ confirmar). `q` ou `ESC` na janela encerra.
 O `totem-menu` conversa com o site gravando `preview/gesture_state.json`
 (ignorado pelo git), que o site lê a cada 250 ms.
 
+## Treino baseline (Check-in 3)
+
+Com amostras em `data/` (manifest + `.npy`), treine e avalie o classificador
+baseline. A divisão é **leave-one-signer-out**: cada fold deixa um sinalizador
+inteiro no teste, para a acurácia não inflar por vazamento de pessoa.
+
+```powershell
+totem-train --model all --features mean
+```
+
+Opções úteis: `--model knn` ou `random_forest`, `--features flatten`,
+`--data-root data`, `--output-dir models`, `--seed 42`.
+
+O comando imprime o progresso (carregando, fold a fold, salvando) e grava em
+`models/<run_id>/`:
+
+| Arquivo | Conteúdo |
+| --- | --- |
+| `metrics.json` | Acurácia, precision/recall/F1 macro por fold e agregados |
+| `confusion_matrix.json` | Matriz de confusão somada dos folds |
+| `model.joblib` | Modelo final treinado em todas as amostras |
+| `report.md` | Resumo em Markdown para a apresentação |
+
 ## Desenvolvimento
 
 A suíte de testes cobre apenas lógica pura e **não exige MediaPipe nem webcam**,
@@ -241,9 +264,17 @@ src/totem_aju/
   data/
     manifest.py               índice das amostras em JSON Lines
     recorder.py               orquestra captura → disco
+  ml/
+    dataset.py                carrega manifest + .npy
+    features.py               média temporal ou flatten
+    split.py                  leave-one-signer-out
+    models.py                 factory K-NN / Random Forest
+    metrics.py                accuracy, P/R/F1, matriz de confusão
+    train.py                  orquestra LOSO e grava artefatos
   cli/
     capture.py                interface de coleta
     menu.py                   totem-menu: webcam + janela do menu por dedos
+    train.py                  totem-train: baseline + métricas
 preview/
   index.html                  tela apresentável do totem
   styles.css / app.js         interface e interação
@@ -264,11 +295,13 @@ sintéticos e trabalhar no projeto sem ter a captura configurada. Detalhes em
 ## Situação atual
 
 Concluído: fundação do projeto, pipeline de extração e normalização de landmarks,
-coleta de dados com indexação, suite de testes, CI e **preview apresentável**
-com base curada + VLibras.
+coleta de dados com indexação, suite de testes, CI, **preview apresentável**
+com base curada + VLibras + menu por dedos, e **treino baseline** (K-NN /
+Random Forest) com métricas leave-one-signer-out.
 
-Próximas etapas: coleta do dataset em volume, treino do classificador temporal
-e evolução do preview para o quiosque completo (webcam + reconhecimento).
+Próximas etapas: enriquecer a coleta com sinalizadores reais, ligar o
+classificador ao preview, explorar um modelo temporal (GRU/CNN 1D) e validar
+com usuários surdos ou intérpretes.
 
 ## Licença
 
