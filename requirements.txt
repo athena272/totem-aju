@@ -10,6 +10,8 @@
 
 mediapipe==0.10.21
 numpy==1.26.4
+scikit-learn==1.5.2
+joblib==1.4.2
 
 # NAO adicione opencv-python aqui. O mediapipe ja depende de
 # opencv-contrib-python, e as duas distribuicoes instalam o mesmo modulo 'cv2',
