@@ -52,6 +52,27 @@ MANIFEST_FILENAME: Final[str] = "manifest.jsonl"
 #: Subdiretorio onde ficam os arrays de landmarks.
 SAMPLES_DIRNAME: Final[str] = "samples"
 
+#: Raiz dos artefatos de treino (modelos, metricas). Ignorada pelo git.
+DEFAULT_MODELS_ROOT: Final[Path] = Path("models")
+
+#: Nomes de extracao de features aceitos pelo totem-train.
+FEATURE_MEAN: Final[str] = "mean"
+FEATURE_FLATTEN: Final[str] = "flatten"
+FEATURE_MODES: Final[tuple[str, ...]] = (FEATURE_MEAN, FEATURE_FLATTEN)
+
+#: Nomes de modelos baseline aceitos pelo totem-train.
+MODEL_KNN: Final[str] = "knn"
+MODEL_RANDOM_FOREST: Final[str] = "random_forest"
+MODEL_ALL: Final[str] = "all"
+MODEL_CHOICES: Final[tuple[str, ...]] = (
+    MODEL_KNN,
+    MODEL_RANDOM_FOREST,
+    MODEL_ALL,
+)
+
+#: Semente padrao para reproducibilidade do treino.
+DEFAULT_TRAIN_SEED: Final[int] = 42
+
 # --- Numero minimo de repeticoes recomendado por sinal e sinalizador --------
 
 MIN_REPETITIONS_PER_SIGN: Final[int] = 20

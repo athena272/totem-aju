@@ -58,3 +58,40 @@ class EmptySequenceError(TotemAjuError):
             "A sequencia esta vazia. Nenhum quadro foi capturado, "
             "provavelmente porque a camera nao entregou imagens."
         )
+
+
+class DatasetEmptyError(TotemAjuError):
+    """O manifest nao contem amostras para treinar."""
+
+    def __init__(self, data_root: str) -> None:
+        self.data_root = data_root
+        super().__init__(
+            f"Nenhuma amostra encontrada em '{data_root}'. "
+            "Colete com totem-capture ou confira --data-root."
+        )
+
+
+class InsufficientSignersError(TotemAjuError):
+    """Leave-one-signer-out exige pelo menos dois sinalizadores."""
+
+    def __init__(self, n_signers: int) -> None:
+        self.n_signers = n_signers
+        super().__init__(
+            f"Ha apenas {n_signers} sinalizador(es). "
+            "A avaliacao leave-one-signer-out precisa de pelo menos 2."
+        )
+
+
+class InvalidSampleShapeError(TotemAjuError):
+    """Um arquivo .npy nao tem o shape esperado pelo classificador."""
+
+    def __init__(
+        self,
+        path: str,
+        actual: tuple[int, ...],
+        expected: tuple[int, int],
+    ) -> None:
+        self.path = path
+        self.actual = actual
+        self.expected = expected
+        super().__init__(f"Amostra '{path}' tem shape {actual}, esperado {expected}.")
