@@ -15,6 +15,7 @@ license = { file = "LICENSE" }
 [project.scripts]
 totem-capture = "totem_aju.cli.capture:main"
 totem-menu = "totem_aju.cli.menu:main"
+totem-train = "totem_aju.cli.train:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
