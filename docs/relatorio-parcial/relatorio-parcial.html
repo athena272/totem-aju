@@ -147,6 +147,7 @@
   /* ---------- figuras ---------- */
   figure { margin: 6pt 0 14pt; break-inside: avoid; text-align: center; }
   figure img { width: 100%; border: 1px solid #d3dae0; border-radius: 4px; }
+  figure.wide img { width: 95%; }
   figcaption { font-size: 9pt; color: #52606d; margin-top: 4pt; text-align: center; }
 
   /* ---------- diagramas ---------- */
@@ -686,6 +687,21 @@ atômica e um identificador por escolha); o site lê esse arquivo a cada 250 ms 
 decide o que o número significa no nível atual do menu. Assim, mudar as categorias
 da base de conhecimento não exige mudar o código de visão.</p>
 
+<p><strong>Sequência de navegação.</strong> As Figuras 4 e 5 mostram o fluxo em
+uso: à esquerda, o preview; à direita, a janela do <code>totem-menu</code> com a
+webcam. Primeiro o usuário escolhe a categoria; em seguida, com a mão abaixada e
+levantada de novo, escolhe o assunto.</p>
+
+<figure class="wide">
+  <img src="img/menu-dedos-categoria.png" alt="Preview e totem-menu: três dedos escolhem a categoria Pontos turísticos">
+  <figcaption>Figura 4. Passo 1: três dedos confirmados escolhem a categoria Pontos turísticos. A barra verde e a mensagem &ldquo;3 escolhido&rdquo; aparecem na janela da câmera.</figcaption>
+</figure>
+
+<figure class="wide">
+  <img src="img/menu-dedos-assunto.png" alt="Preview e totem-menu: cinco dedos escolhem o assunto Igreja">
+  <figcaption>Figura 5. Passo 2: cinco dedos escolhem o assunto Igreja. O site destaca a opção, marca a resposta como &ldquo;escolhido por gesto&rdquo; e exibe o texto curado.</figcaption>
+</figure>
+
 <h3>Preview do totem com VLibras</h3>
 
 <p>O preview é a interface web do totem. Ela tem 4 categorias (Serviços,
@@ -697,11 +713,11 @@ menu por dedos.</p>
 <div class="two-col">
   <figure>
     <img src="img/preview-orla.png" alt="Preview do Totem Aju com a resposta sobre a Orla de Atalaia">
-    <figcaption>Figura 4. Categoria Pontos turísticos, assunto 2 (Orla) e a resposta curada. Os números indicam quantos dedos escolhem cada opção.</figcaption>
+    <figcaption>Figura 6. Preview: categoria Pontos turísticos, assunto 2 (Orla) e a resposta curada. Os números indicam quantos dedos escolhem cada opção.</figcaption>
   </figure>
   <figure>
     <img src="img/preview-vlibras.png" alt="Avatar do VLibras sinalizando a resposta">
-    <figcaption>Figura 5. O avatar do VLibras sinalizando a resposta em Libras, ao lado do texto em português.</figcaption>
+    <figcaption>Figura 7. O avatar do VLibras sinalizando a resposta em Libras, ao lado do texto em português.</figcaption>
   </figure>
 </div>
 
