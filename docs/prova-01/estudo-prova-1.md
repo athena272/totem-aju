@@ -479,6 +479,8 @@ No nosso exemplo, o atalho custa 4,0 + 5 = **9,0** e o contorno custa 5,42 + 0 =
 
 ## 6. Exercícios (gabarito no fim)
 
+Para treinar no formato da prova (bot com enunciado comum, A* contra largura, tabela-verdade e caminho falho), faça também o [simulado](simulado-prova-1.md) ([PDF](simulado-prova-1.pdf)).
+
 1. Faça o PEAS de um **robô de entrega num shopping** e classifique o ambiente nas 7 dimensões.
 2. No grafo S → A, S → B; A → C; B → D, B → G; C → G, com filhos em ordem alfabética, mostre a **fila** da BFS e a **pilha** da DFS até achar G. Qual caminho cada uma encontra?
 3. Arestas: S-A = 1, S-B = 4, A-B = 2, A-G = 12, B-G = 3. Heurística: h(S) = 5, h(A) = 4, h(B) = 2, h(G) = 0.
@@ -551,7 +553,7 @@ Só é verdadeira com P = F e Q = V.
   - Vídeos 13 a 17: lógica.
 - Playlist "Introdução à Inteligência Artificial", do canal AlgoritmoZ (40 vídeos curtos, de cerca de 10 min):
   - [#2: Agentes e Racionalidade](https://www.youtube.com/watch?v=z173gTz8GWI): agentes, função do agente e o aspirador de pó, igual à Aula 02.
-  - #3: Ambiente de Tarefas e PEAS: a tabela PEAS e as propriedades do ambiente. É o vídeo logo depois do #2 na playlist.
+  - \#3: Ambiente de Tarefas e PEAS: a tabela PEAS e as propriedades do ambiente. É o vídeo logo depois do #2 na playlist.
 - [Algoritmos de busca, Parte 2: largura e profundidade](https://www.youtube.com/watch?v=wlQrlL17L1g): mostra a fronteira como fila e como pilha, passo a passo.
 
 **Vídeos em inglês (Berkeley CS188, usa o mesmo livro)**
