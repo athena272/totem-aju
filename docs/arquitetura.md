@@ -69,6 +69,13 @@ Isso não é preciosismo arquitetural; resolve três problemas concretos:
 | `menu/session.py` | Loop câmera → contagem → escolha → estado | MediaPipe (recebe o Protocol) |
 | `cli/menu.py` | Janela com retorno visual e mensagens de erro | Regras de confirmação |
 | `preview/js/gesture-menu.js` | Significado do número em cada nível do menu | Webcam, Python |
+| `ml/dataset.py` | Carregar manifest + `.npy` e validar shape | Sklearn, modelos |
+| `ml/features.py` | Média temporal ou flatten da sequência | Disco, modelos |
+| `ml/split.py` | Leave-one-signer-out | Features, sklearn |
+| `ml/models.py` | Factory K-NN / Random Forest | Dataset, métricas |
+| `ml/metrics.py` | Accuracy, P/R/F1 macro, matriz de confusão | Disco, CLI |
+| `ml/train.py` | Orquestrar LOSO, agregar e gravar artefatos | MediaPipe, preview |
+| `cli/train.py` | Interação do operador no treino baseline | Regras de split |
 
 ## Menu por dedos
 
@@ -185,7 +192,7 @@ em `requirements.txt`, ambiente virtual em `.venv`.
 | até 03/09 | Checkpoint: equipe, tema e justificativa definidos |
 | setembro | Coleta do dataset e pipeline de extração de landmarks |
 | outubro | Treino e avaliação do classificador; integração do VLibras |
-| início de novembro | Montagem do quiosque e testes com usuários surdos |
+| início de novembro | Baseline sklearn (LOSO) + Check-in 3; depois quiosque e testes com usuários |
 | 23–25/11 | Apresentação final e artigo |
 
 ## Fora do escopo desta fase
